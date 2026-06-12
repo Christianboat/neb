@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Media Gallery | Nebula Cybernetics Academy{% endblock %}
+
+{% block content %}
+<!-- GALLERY HERO -->
+<section class="gallery-hero">
+    <div class="container">
+        <h1 class="gallery-hero__title">Media Gallery</h1>
+        <p class="gallery-hero__lead">
+            Capturing the moments that define our impact across the globe.
+        </p>
+    </div>
+</section>
+
+<!-- MAIN GALLERY SECTION -->
+<section class="gallery-main">
+    <div class="container">
+
+        <!-- Gallery Filters -->
+        <div class="gallery-filters">
+            <button class="filter-btn active" data-filter="all">All Media</button>
+            {% if gallery_programs %}
+            {% for prog in gallery_programs %}
+            <button class="filter-btn" data-filter="prog-{{ prog.id }}">{{ prog.name }}</button>
+            {% endfor %}
+            {% endif %}
+            <button class="filter-btn" data-filter="media-image">Photos</button>
+            <button class="filter-btn" data-filter="media-video">Videos</button>
+        </div>
+
+        <div class="gallery-grid gallery-grid--lg" id="full-gallery">
+            {% if gallery_items %}
+            {% for item in gallery_items %}
+            <div class="gallery-item gallery-item--feature filter-item prog-{{ item.program_id if item.program_id else 'none' }} media-{{ 'video' if item.video_url else 'image' }}">
+
+                {% if item.video_url %}
+                <div class="video-fill">
+                    <iframe src="{{ item.video_url|youtube_embed }}" allowfullscreen></iframe>
+                </div>
+                {% else %}
+                <img src="{{ url_for('static', filename='uploads/gallery/' + item.image_filename) }}"
+                    alt="{{ item.title or 'Gallery image' }}" loading="lazy">
+                {% endif %}
+
+                {% if item.title %}
+                <div class="gallery-caption gallery-caption--rich">
+                    <h4>{{ item.title }}</h4>
+                    {% if item.program %}
+                    <small>{{ item.program.name }}</small>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-images"></i>
+                <h3>No media found.</h3>
+                <p>Check back soon for updates from our latest events.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const galleryItems = document.querySelectorAll('.filter-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.getAttribute('data-filter');
+
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                galleryItems.forEach(item => {
+                    if (filter === 'all' || item.classList.contains(filter)) {
+                        item.classList.remove('hidden');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

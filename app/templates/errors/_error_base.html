@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="error-page">
+    <div class="error-inner">
+        <div class="error-code">{% block code %}Error{% endblock %}</div>
+        <h1 class="error-title">{% block heading %}Something went wrong{% endblock %}</h1>
+        <p class="error-message">{% block message %}An unexpected error occurred.{% endblock %}</p>
+        <div class="error-actions">
+            <a href="{{ url_for('main.index') }}" class="btn-primary-lg"><i class="fas fa-home"></i> Back to Home</a>
+            <a href="{{ url_for('main.contact') }}" class="btn-outline-lg"><i class="fas fa-envelope"></i> Contact Us</a>
+        </div>
+    </div>
+</section>
+
+<style>
+    .error-page {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 140px 20px 80px;
+        background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+    }
+    .error-inner { max-width: 640px; }
+    .error-code {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(5rem, 18vw, 9rem);
+        font-weight: 800;
+        line-height: 1;
+        color: var(--primary, #1a2b48);
+        opacity: 0.9;
+    }
+    .error-title {
+        font-size: clamp(1.5rem, 4vw, 2.25rem);
+        margin: 10px 0 16px;
+        color: var(--primary, #1a2b48);
+    }
+    .error-message { color: #5b6b7f; font-size: 1.05rem; margin-bottom: 32px; }
+    .error-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary-lg, .btn-outline-lg {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 14px 28px; border-radius: 8px; font-weight: 700;
+        text-decoration: none; transition: all .2s ease;
+    }
+    .btn-primary-lg { background: var(--primary, #1a2b48); color: #fff; }
+    .btn-primary-lg:hover { transform: translateY(-2px); opacity: .92; }
+    .btn-outline-lg {
+        border: 2px solid var(--primary, #1a2b48);
+        color: var(--primary, #1a2b48);
+    }
+    .btn-outline-lg:hover { background: var(--primary, #1a2b48); color: #fff; }
+</style>
+{% endblock %}

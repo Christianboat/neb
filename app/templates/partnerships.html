@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+
+{% block title %}Partnerships & Collaborations | Nebula Cybernetics Academy{% endblock %}
+{% block description %}Partner with Nebula Cybernetics Academy - explore school partnerships, corporate sponsorships, embassy
+collaborations, and custom programs.{% endblock %}
+
+{% block content %}
+<!-- PARTNERSHIPS -->
+<section id="partnerships" class="section-alt">
+    <div class="container">
+        <div class="section-header reveal">
+
+            <h2>{{ page.hero_title|safe if page else 'Partnerships & Collaborations' }}</h2>
+            {% if sections and sections.intro %}
+            {{ sections.intro.content | safe }}
+            {% else %}
+            <p class="measure">Together, We Build Platforms That Inspire Excellence.</p>
+            {% endif %}
+        </div>
+
+        <div class="partner-intro">
+            {% if sections and sections.description %}
+            {{ sections.description.content | safe }}
+            {% else %}
+            <p>Nebula Cybernetics Academy believes that meaningful impact is created through partnership partnership with
+                schools, companies, cultural institutions, governments, nonprofits, and development organizations. Our
+                programs thrive because we work hand-in-hand with organizations that share our passion for education,
+                innovation, and empowerment.</p>
+            <p>Whether you are a school seeking new opportunities for your learners, a company looking for meaningful
+                CSR engagement, or an embassy interested in cultural collaboration — Nebula offers partnership pathways
+                that create measurable and lasting value.</p>
+            {% endif %}
+        </div>
+
+        <div class="partner-grid">
+            {% if partnerships %}
+            {% for partner in partnerships %}
+            {% if partner.type == 'schools' %}
+            <!-- 1. SCHOOLS -->
+            <div class="partner-card">
+                <h3>
+                    {% if partner.image_filename %}
+                    <img src="{{ url_for('static', filename='uploads/partners/' + partner.image_filename) }}" alt="logo"
+                        class="partner-logo">
+                    {% elif partner.logo_url %}
+                    <img src="{{ partner.logo_url }}" alt="logo" class="partner-logo">
+                    {% else %}
+                    <i class="fas fa-school"></i>
+                    {% endif %}
+                    {{ partner.title|safe }}
+                </h3>
+                <p class="partner-desc">{{ partner.description|safe }}</p>
+                {% if partner.benefits %}
+                <ul class="partner-list">
+                    {% for benefit in partner.benefits_list %} <!-- Assumes benefits is a list -->
+                    <li>{{ benefit }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <p><strong>Ideal for:</strong> K–12 schools, International schools, After-school academies, Education
+                    networks and school groups.</p>
+                <a href="{{ url_for('main.contact') }}" class="partner-cta">Become a Partner School <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+            {% elif partner.type == 'corporate' %}
+            <!-- 2. CORPORATE -->
+            <div class="partner-card corporate">
+                <h3>
+                    {% if partner.image_filename %}
+                    <img src="{{ url_for('static', filename='uploads/partners/' + partner.image_filename) }}" alt="logo"
+                        class="partner-logo">
+                    {% elif partner.logo_url %}
+                    <img src="{{ partner.logo_url }}" alt="logo" class="partner-logo">
+                    {% else %}
+                    <i class="fas fa-hand-holding-dollar"></i>
+                    {% endif %}
+                    {{ partner.title }}
+                </h3>
+                <p class="partner-desc">{{ partner.description }}</p>
+                {% if partner.benefits %}
+                <ul class="partner-list">
+                    {% for benefit in partner.benefits_list %}
+                    <li>{{ benefit }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if partner.tiers %}
+                <p class="mb-10"><strong>Sponsorship Tiers Available:</strong></p>
+                <div class="tiers-container">
+                    {% for tier in partner.tiers %}
+                    <span class="tier-badge">{{ tier.tier_name }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <a href="{{ url_for('main.contact') }}" class="partner-cta">Download Prospectus <i
+                        class="fas fa-download"></i></a>
+            </div>
+            {% elif partner.type == 'embassies' %}
+            <!-- 3. EMBASSIES -->
+            <div class="partner-card">
+                <h3><i class="fas fa-landmark"></i> {{ partner.title }}</h3>
+                <p class="partner-desc">{{ partner.description }}</p>
+                {% if partner.benefits %}
+                <!-- Using benefits as flexible content container -->
+                <ul class="partner-list">
+                    {% for benefit in partner.benefits_list %}
+                    <li>{{ benefit }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <p class="italic text-sm">Such partnerships allow Nebula to help advance
+                    cross-cultural appreciation and build global citizens.</p>
+            </div>
+            {% elif partner.type == 'universities' %}
+            <!-- 4. UNIVERSITIES -->
+            <div class="partner-card">
+                <h3><i class="fas fa-university"></i> {{ partner.title }}</h3>
+                <p class="partner-desc">{{ partner.description }}</p>
+                {% if partner.benefits %}
+                <ul class="partner-list">
+                    {% for benefit in partner.benefits_list %}
+                    <li>{{ benefit }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <a href="{{ url_for('main.contact') }}" class="partner-cta">Partner With Us <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+            {% elif partner.type == 'publishers' %}
+            <!-- 5. PUBLISHERS -->
+            <div class="partner-card">
+                <h3><i class="fas fa-laptop-code"></i> {{ partner.title }}</h3>
+                <p class="partner-desc">{{ partner.description }}</p>
+                {% if partner.benefits %}
+                <ul class="partner-list">
+                    {% for benefit in partner.benefits_list %}
+                    <li>{{ benefit }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% elif partner.type == 'custom' %}
+            <!-- 6. CUSTOM -->
+            <div class="partner-card corporate">
+                <h3><i class="fas fa-puzzle-piece"></i> {{ partner.title }}</h3>
+                <p class="partner-desc">{{ partner.description }}</p>
+                {% if partner.benefits %}
+                <ul class="partner-list">
+                    {% for benefit in partner.benefits_list %}
+                    <li>{{ benefit }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% else %}
+            <!-- Generic fallback -->
+            <div class="partner-card">
+                <h3>{{ partner.title }}</h3>
+                <p class="partner-desc">{{ partner.description }}</p>
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% else %}
+            <!-- Fallback if no DB content -->
+            <!-- 1. SCHOOLS -->
+            <div class="partner-card">
+                <h3><i class="fas fa-school"></i> Schools</h3>
+                <p class="partner-desc">Empowering students, enhancing teaching, elevating school identity.</p>
+                <ul class="partner-list">
+                    <li>Priority access to Nebula competitions and training</li>
+                    <li>Eligibility to join the Ambassador Schools Network</li>
+                    <li>Opportunities for teachers to access professional development</li>
+                    <li>Recognition awards for outstanding performance</li>
+                    <li>Discounts and early-bird registration options</li>
+                    <li>School branding visibility in national and international platforms</li>
+                </ul>
+                <p><strong>Ideal for:</strong> K–12 schools, International schools, After-school academies, Education
+                    networks and school groups.</p>
+                <a href="{{ url_for('main.contact') }}" class="partner-cta">Become a Partner School <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <!-- 2. CORPORATE -->
+            <div class="partner-card corporate">
+                <h3><i class="fas fa-hand-holding-dollar"></i> Corporate</h3>
+                <p class="partner-desc">Where business meets impact.</p>
+                <ul class="partner-list">
+                    <li>High visibility across schools and communities</li>
+                    <li>Brand positioning in educational excellence</li>
+                    <li>Alignment with CSR, ESG, SDG, and youth empowerment goals</li>
+                    <li>Sponsorship options across competitions, expos, and awards</li>
+                    <li>Custom-built corporate learning or outreach programs</li>
+                    <li>Opportunities to sponsor scholarships, trophies, awards, and digital learning content</li>
+                </ul>
+                <p class="mb-10"><strong>Sponsorship Tiers Available:</strong></p>
+                <div class="tiers-container">
+                    <span class="tier-badge">Platinum Partner</span>
+                    <span class="tier-badge">Gold Partner</span>
+                    <span class="tier-badge">Silver Partner</span>
+                    <span class="tier-badge">Event Sponsor</span>
+                    <span class="tier-badge">Category Sponsor</span>
+                </div>
+                <a href="{{ url_for('main.contact') }}" class="partner-cta">Download Prospectus <i
+                        class="fas fa-download"></i></a>
+            </div>
+            <!-- Other static cards omitted for brevity in fallback but should really be included if identical parity is strict. -->
+            <!-- I will include them all to be safe for "NO removal" rule. -->
+            <div class="partner-card">
+                <h3><i class="fas fa-landmark"></i> Embassies & Int'l Orgs</h3>
+                <p class="partner-desc">Strengthening global dialogue through education and culture.</p>
+                <ul class="partner-list">
+                    <li>Embassies</li>
+                    <li>Cultural missions</li>
+                    <li>International councils</li>
+                    <li>Development organizations</li>
+                    <li>Global education networks</li>
+                </ul>
+            </div>
+            <div class="partner-card">
+                <h3><i class="fas fa-university"></i> Universities</h3>
+                <p class="partner-desc">Connecting learners to higher education opportunities.</p>
+                <ul class="partner-list">
+                    <li>Host workshops, webinars, and guidance sessions</li>
+                    <li>Participate in career fairs and expos</li>
+                    <li>Offer scholarships for competition winners</li>
+                    <li>Support professional development programs</li>
+                </ul>
+                <a href="{{ url_for('main.contact') }}" class="partner-cta">Partner With Us <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="partner-card">
+                <h3><i class="fas fa-laptop-code"></i> Publishers & EdTech</h3>
+                <p class="partner-desc">Showcasing educational innovation.</p>
+                <ul class="partner-list">
+                    <li>Book publishers</li>
+                    <li>Edtech platforms</li>
+                    <li>AI learning tools</li>
+                    <li>STEM companies</li>
+                    <li>Education product developers</li>
+                </ul>
+            </div>
+            <div class="partner-card corporate">
+                <h3><i class="fas fa-puzzle-piece"></i> Custom Programs</h3>
+                <p class="partner-desc">Because every organization has a unique mission.</p>
+                <ul class="partner-list">
+                    <li>NGOs</li>
+                    <li>Foundations</li>
+                    <li>Corporate CSR teams</li>
+                    <li>Government agencies</li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- PARTNERSHIP PROMISE -->
+        <div class="partner-promise-box">
+            <h3>🌈 THE NEBULA PARTNERSHIP PROMISE</h3>
+            <p>Every partnership is a shared journey — built with trust, purpose, and desire to uplift communities
+                through education and excellence.</p>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

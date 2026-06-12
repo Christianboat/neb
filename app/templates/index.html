@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<header class="hero" id="home">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+        <h1>{{ page.hero_title|safe }}</h1>
+        {% if page.hero_subtitle %}
+        <p class="hero-subtitle">{{ page.hero_subtitle|safe }}</p>
+        {% endif %}
+        <p>{{ page.hero_description|safe }}</p>
+
+        <div class="hero-buttons">
+            <a href="{{ url_for('main.join') }}" class="btn btn-gold">Join Us Now</a>
+            <a href="{{ url_for('main.programs') }}" class="btn btn-outline">Explore Our Programs</a>
+            <a href="{{ url_for('main.partnerships') }}" class="btn btn-outline">Become a Partner</a>
+        </div>
+    </div>
+</header>
+
+<!-- WHO WE ARE (Home Intro) -->
+<section class="who-we-are">
+    <div class="container reveal">
+        {% if sections and sections['intro'] %}
+        {{ sections['intro'].content|safe }}
+        {% else %}
+        <p>Nebula is a global technology and AI institute offering competitions, training programs, awards, trade
+            fairs, and 360° educational services.</p>
+        <p>Our work spans youth robotics empowerment, AI leadership training, leadership training, innovation showcases, and
+            institutional partnerships.</p>
+        <p><strong>We believe every person carries a unique gift.</strong></p>
+        <p>Our mission is to create platforms that unlock talent, build confidence, and inspire lifelong learning — from
+            classrooms to corporate boardrooms.</p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- FLAGSHIP PROGRAMS (HOME) -->
+<section id="flagship" class="section-alt">
+    <div class="container">
+        <div class="section-header reveal">
+            <p class="eyebrow">What We Offer</p>
+            <h2>Our Flagship Programs</h2>
+        </div>
+
+        <div class="filter-nav reveal">
+            <button class="filter-btn active" data-filter="all">All Programs</button>
+            <button class="filter-btn" data-filter="competitions">Competitions</button>
+            <button class="filter-btn" data-filter="training">Training</button>
+            <button class="filter-btn" data-filter="recognition">Recognition</button>
+            <button class="filter-btn" data-filter="awards">Awards</button>
+            <button class="filter-btn" data-filter="trade_fairs">Tech Expos</button>
+        </div>
+
+        <div class="grid-3">
+            {% if programs %}
+            {% for program in programs %}
+            {% include 'partials/program_card.html' %}
+            {% endfor %}
+            {% else %}
+            <p class="text-center py-5">No programs available at the moment. Please check back later.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- SEPARATOR -->
+<div class="home-cta-strip">
+    <a href="{{ url_for('main.about') }}" class="btn btn-blue">Discover More About Nebula</a>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+<article class="flagship-card show" data-category="{{ program.type }}">
+    {% if program.image_filename %}
+    <img src="{{ url_for('static', filename='uploads/programs/' + program.image_filename) }}"
+        alt="{{ program.name }}" class="card-img" loading="lazy">
+    {% elif program.icon %}
+    <div class="card-icon-wrapper"><i class="{{ program.icon }}"></i></div>
+    {% endif %}
+    <div class="card-body-content">
+        <span class="program-badge program-badge--{{ program.type }}">
+            {{ program.type|replace('_', ' ')|capitalize }}
+        </span>
+        <h3 class="card-title">{{ program.name|safe }}</h3>
+        <p class="card-excerpt">
+            {{ program.excerpt if program.excerpt else (program.description[:100] + '...' if program.description else
+            '') }}
+        </p>
+        <a href="{{ program.detail_url }}" class="btn-text-link">
+            {{ program.cta_text if program.cta_text else 'Learn More' }} <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+</article>

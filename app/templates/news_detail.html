@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }} | Nebula News{% endblock %}
+{% block description %}{{ article.excerpt if article.excerpt else article.content|striptags|truncate(160) }}{% endblock
+%}
+{% block og_image %}{% if article.image_filename %}{{ url_for('static', filename='uploads/news/' + article.image_filename, _external=True) }}{% elif article.featured_image_url %}{{ article.featured_image_url }}{% else %}{{ url_for('static', filename='img/og-default.png', _external=True) }}{% endif %}{% endblock %}
+
+{% block content %}
+<!-- POST HEADER / HERO -->
+<section class="news-hero">
+    {% if article.image_filename or article.featured_image_url %}
+    <div class="news-hero__bg"
+        style="background-image: url('{{ url_for('static', filename='uploads/news/' + article.image_filename) if article.image_filename else article.featured_image_url }}');">
+    </div>
+    {% endif %}
+    <div class="container news-hero__inner">
+        <div class="pill-badge">{{ article.category }}</div>
+        <h1 class="news-hero__title">{{ article.title }}</h1>
+        <div class="news-hero__meta">
+            <i class="far fa-calendar-alt"></i> {{ article.date_published.strftime('%B %d, %Y') if
+            article.date_published else '' }}
+        </div>
+    </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<section class="news-body">
+    <div class="container">
+        <div class="article-layout">
+            <!-- ARTICLE BODY -->
+            <div class="article-main">
+                {% if article.image_filename or article.featured_image_url %}
+                <div class="article-featured-image">
+                    <img src="{{ url_for('static', filename='uploads/news/' + article.image_filename) if article.image_filename else article.featured_image_url }}"
+                        alt="{{ article.title }}" loading="lazy">
+                </div>
+                {% endif %}
+
+                <div class="article-content">
+                    {{ article.content | safe }}
+                </div>
+
+                <!-- Tags / Share -->
+                <div class="article-footer">
+                    <a href="{{ url_for('main.news_impact') }}" class="btn-back">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to News</span>
+                    </a>
+
+                    <div class="share-row">
+                        <span class="share-row__label">Share:</span>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url|urlencode }}"
+                            target="_blank" rel="noopener" class="share-btn fb" title="Share on Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?text={{ article.title|urlencode }}&url={{ request.url|urlencode }}"
+                            target="_blank" rel="noopener" class="share-btn tw" title="Share on Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.url|urlencode }}"
+                            target="_blank" rel="noopener" class="share-btn ln" title="Share on LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <button class="share-btn copy" title="Copy Link" id="copy-link-btn">
+                            <i class="fas fa-link"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <script>
+                    document.getElementById('copy-link-btn').addEventListener('click', function () {
+                        navigator.clipboard.writeText(window.location.href).then(() => {
+                            const icon = this.querySelector('i');
+                            const originalClass = icon.className;
+                            icon.className = 'fas fa-check';
+                            setTimeout(() => { icon.className = originalClass; }, 2000);
+                        });
+                    });
+                </script>
+            </div>
+
+            <!-- SIDEBAR -->
+            <aside class="article-sidebar">
+                <div class="sidebar-sticky">
+                    <!-- Latest News Widget -->
+                    <div class="widget">
+                        <h4 class="widget-title">More News</h4>
+                        <div class="sidebar-news-list">
+                            {% if recent_articles %}
+                            {% for news in recent_articles %}
+                            <div class="sidebar-news-item">
+                                <div class="item-date">{{ news.date_published.strftime('%b %d, %Y') if
+                                    news.date_published else '' }}</div>
+                                <a href="{{ url_for('main.news_detail', article_id=news.id) }}" class="item-title">
+                                    {{ news.title }}
+                                </a>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <p class="text-grey">Check back for more updates from Nebula.</p>
+                            {% endif %}
+                        </div>
+                        <a href="{{ url_for('main.news_impact') }}" class="view-all-link">View
+                            All News <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <!-- Categories Widget -->
+                    <div class="widget widget--boxed">
+                        <h4 class="widget-title widget-title--plain">Categories</h4>
+                        <ul class="category-list">
+                            {% if categories %}
+                            {% for cat in categories %}
+                            <li>
+                                <a href="{{ url_for('main.news_impact') }}">
+                                    <span class="cat-name"><i class="fas fa-chevron-right"></i>{{ cat.name }}</span>
+                                    <span class="cat-count">{{ cat.count }}</span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                            {% else %}
+                            <p class="text-grey">Discover our updates.</p>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+<!-- More Stories Section -->
+{% if recent_articles %}
+<section class="more-stories">
+    <div class="container">
+        <h3 class="text-center mb-40">More Stories</h3>
+        <div class="grid-3">
+            {% for related in recent_articles %}
+            <a href="{{ url_for('main.news_detail', article_id=related.id) }}" class="story-card">
+                {% if related.image_filename %}
+                <img src="{{ url_for('static', filename='uploads/news/' + related.image_filename) }}"
+                    class="story-card__img" alt="{{ related.title }}" loading="lazy">
+                {% elif related.featured_image_url %}
+                <img src="{{ related.featured_image_url }}" class="story-card__img" alt="{{ related.title }}"
+                    loading="lazy">
+                {% else %}
+                <div class="story-card__placeholder"><i class="fas fa-newspaper fa-3x"></i></div>
+                {% endif %}
+                <div class="story-card__body">
+                    <div class="story-card__cat">{{ related.category }}</div>
+                    <h5 class="story-card__title">{{ related.title|truncate(60) }}</h5>
+                    <p class="story-card__excerpt">{{ related.excerpt|truncate(80) if related.excerpt
+                        else related.content|striptags|truncate(80) }}</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

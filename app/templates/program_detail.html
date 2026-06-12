@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}{{ program.name }} | Nebula Cybernetics Academy{% endblock %}
+{% block description %}{{ program.excerpt if program.excerpt else (program.description[:160] if program.description else
+'Nebula Cybernetics Academy program detail.') }}{% endblock %}
+{% block og_image %}{% if program.image_filename %}{{ url_for('static', filename='uploads/programs/' + program.image_filename, _external=True) }}{% else %}{{ url_for('static', filename='img/og-default.png', _external=True) }}{% endif %}{% endblock %}
+
+{% block content %}
+<!-- PROGRAM HERO -->
+<section class="program-hero">
+    <div class="container">
+        <div class="program-hero__badge">
+            {{ program.type|replace('_', ' ')|upper }}
+        </div>
+        <h1 class="program-hero__title">{{ program.name|safe }}</h1>
+        <p class="program-hero__lead">{{ program.excerpt|safe if program.excerpt else '' }}</p>
+    </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<section class="program-main">
+    <div class="container">
+        <div class="program-layout">
+            <!-- Content Left -->
+            <div class="program-main-col">
+                <div class="program-description">
+                    <h2 class="program-section-title">About the Program</h2>
+                    <div class="prose">
+                        {{ program.description|safe if program.description else 'Full description coming soon.' }}
+                    </div>
+                </div>
+
+                {% if program.subcontents is defined and program.subcontents %}
+                <div class="program-subcontents">
+                    <h3 class="underline-title">Key Details</h3>
+                    <div class="subcontents-grid">
+                        {% for item in program.subcontents %}
+                        <div class="subcontent-item">
+                            <h4>{{ item.title|safe }}</h4>
+                            <div class="subcontent-body">{{ item.content|safe }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Sidebar Right -->
+            <div class="program-sidebar-col">
+                <div class="sidebar-card">
+                    {% if program.image_filename %}
+                    <div class="sidebar-image">
+                        <img src="{{ url_for('static', filename='uploads/programs/' + program.image_filename) }}"
+                            alt="{{ program.name }}" loading="lazy">
+                    </div>
+                    {% elif program.icon %}
+                    <div class="sidebar-icon">
+                        <i class="{{ program.icon }}"></i>
+                    </div>
+                    {% endif %}
+
+                    <h4 class="mb-15 text-primary">Join This Program</h4>
+                    <p class="sidebar-blurb">Ready to excel? Register now or
+                        contact our team for more information about the next intake.</p>
+
+                    {% if program.cta_url %}
+                    <a href="{{ program.cta_url }}" class="btn btn-gold sidebar-cta">
+                        {{ program.cta_text if program.cta_text else 'Register Now' }}
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('main.contact', type=program.type, program=program.name) }}"
+                        class="btn btn-gold sidebar-cta">
+                        Register Interest
+                    </a>
+                    {% endif %}
+
+                    <div class="share-block">
+                        <p class="share-label">Share this program:</p>
+                        <div class="share-links">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url|urlencode }}"
+                                target="_blank" rel="noopener" class="share-fb" title="Share on Facebook">
+                                <i class="fab fa-facebook fa-lg"></i>
+                            </a>
+                            <a href="https://twitter.com/intent/tweet?text={{ program.name|urlencode }}&url={{ request.url|urlencode }}"
+                                target="_blank" rel="noopener" class="share-tw" title="Share on Twitter">
+                                <i class="fab fa-twitter fa-lg"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.url|urlencode }}"
+                                target="_blank" rel="noopener" class="share-li" title="Share on LinkedIn">
+                                <i class="fab fa-linkedin fa-lg"></i>
+                            </a>
+                            <a href="https://api.whatsapp.com/send?text={{ program.name|urlencode }}%20{{ request.url|urlencode }}"
+                                target="_blank" rel="noopener" class="share-wa" title="Share on WhatsApp">
+                                <i class="fab fa-whatsapp fa-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if gallery_items %}
+<!-- PROGRAM GALLERY -->
+<section class="program-gallery">
+    <div class="container">
+        <div class="section-header reveal">
+            <h2>Program Highlights</h2>
+            <p class="text-grey">Photos and videos from our recent activities.</p>
+        </div>
+
+        <div class="gallery-grid">
+            {% for item in gallery_items %}
+            <div class="gallery-item gallery-item--tall">
+                {% if item.video_url %}
+                <div class="video-fill">
+                    <iframe src="{{ item.video_url|youtube_embed }}" allowfullscreen></iframe>
+                </div>
+                {% else %}
+                <img src="{{ url_for('static', filename='uploads/gallery/' + item.image_filename) }}"
+                    alt="{{ item.title or 'Program highlight' }}" loading="lazy">
+                {% endif %}
+                {% if item.title %}
+                <div class="gallery-caption">{{ item.title }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if related_programs %}
+<!-- RELATED PROGRAMS -->
+<section class="related-programs">
+    <div class="container">
+        <div class="section-header reveal">
+            <h2>More {{ program.type|replace('_', ' ')|capitalize }} Programs</h2>
+        </div>
+        <div class="grid-3">
+            {% for program in related_programs %}
+            {% include 'partials/program_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

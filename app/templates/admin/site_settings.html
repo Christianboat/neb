@@ -1,0 +1,52 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0 text-gray-800">{{ legend }}</h1>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label font-weight-bold">Site Name / Brand</label>
+                        {{ form.site_name(class="form-control", placeholder="e.g. NEBULA") }}
+                        {% if form.site_name.errors %}
+                        {% for error in form.site_name.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label font-weight-bold">Copyright Text</label>
+                        {{ form.copyright_text(class="form-control") }}
+                        {% if form.copyright_text.errors %}
+                        {% for error in form.copyright_text.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label font-weight-bold">Footer Description</label>
+                        {{ form.footer_description(class="form-control", rows="4") }}
+                        {% if form.footer_description.errors %}
+                        {% for error in form.footer_description.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                        {% endif %}
+                        <small class="text-muted">A short description of the company for the footer.</small>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+
+{% block title %}Digital Hub | Nebula Cybernetics Academy{% endblock %}
+{% block description %}Explore Nebula Digital Platform - an innovative hub for online competitions, professional
+development, and global learning opportunities.{% endblock %}
+
+{% block content %}
+<!-- DIGITAL HUB -->
+{% if page and page.is_coming_soon %}
+<!-- COMING SOON / VISION PAGE -->
+<section id="digital-vision" class="text-center">
+    <div class="container">
+
+        <!-- Hero -->
+        <div class="block-lg reveal">
+            <div class="pill-badge">
+                <i class="fas fa-rocket"></i> COMING SOON
+            </div>
+            <h1 class="text-primary mb-20">Envisioning the Future of<br>Digital Learning</h1>
+            <p class="lead-text text-grey measure">
+                We are building an innovative hub for online competitions, professional development, and global
+                connectivity.
+                The Nebula Digital Platform will soon bring our entire ecosystem to your fingertips.
+            </p>
+        </div>
+
+        <!-- Vision Grid -->
+        <div class="grid-3 text-left block-lg">
+            <div class="digital-feature-card">
+                <i class="fas fa-trophy feature-icon"></i>
+                <h3>Global Competitions</h3>
+                <p>A seamless portal for live rounds, automated scoring, and international rankings.</p>
+            </div>
+            <div class="digital-feature-card">
+                <i class="fas fa-chalkboard-teacher feature-icon"></i>
+                <h3>Professional Growth</h3>
+                <p>On-demand courses, webinars, and verifiable digital certification for educators.</p>
+            </div>
+            <div class="digital-feature-card">
+                <i class="fas fa-network-wired feature-icon"></i>
+                <h3>Connected Ecosystem</h3>
+                <p>Integrated profiles, smart registration, and community networking features.</p>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="soft-panel">
+            <h3 class="mb-15">Be the First to Know</h3>
+            <p class="mb-25">Join our waitlist to get exclusive early access and updates on the platform launch.</p>
+            <form action="{{ url_for('main.contact') }}" method="get">
+                <button type="submit" class="btn btn-gold">Join the Waitlist</button>
+            </form>
+        </div>
+
+    </div>
+</section>
+
+{% else %}
+<!-- DIGITAL HUB (Full Version) -->
+<section id="digital">
+    <div class="container">
+        <div class="section-header reveal">
+            <p class="eyebrow">Digital Platform</p>
+            <h2>{{ page.hero_title if page else '💻 THE NEBULA DIGITAL PLATFORM' }}</h2>
+            {% if sections and sections.intro %}
+            {{ sections.intro.content | safe }}
+            {% else %}
+            <p>Where Technology Meets Learning, Competition, and Opportunity</p>
+            <p>In a fast-evolving world, education must be accessible, engaging, and borderless. The Nebula Digital
+                Platform is our innovative technological hub designed to deliver competitions, training, certification,
+                and engagement to learners and professionals worldwide.</p>
+            <p class="mt-20">Whether you are a student preparing for a competition, a teacher seeking
+                professional development, or a school leader participating in an expo — the Nebula platform brings
+                everything to your fingertips.</p>
+            {% endif %}
+        </div>
+
+        <!-- Ecosystem List -->
+        <div class="block-lg reveal">
+            <h3 class="text-center mb-30">🌐 A GLOBAL LEARNING & EVENT ECOSYSTEM</h3>
+            <p class="text-center mb-30">Our digital platform integrates all major Nebula
+                programs into one seamless experience:</p>
+            <div class="ecosystem-list">
+                {% if sections.get('ecosystem') and sections['ecosystem'].items.count() %}
+                {% for item in sections['ecosystem'].items|sort(attribute='order') %}
+                <div class="ecosystem-item"><i class="fas fa-check-circle"></i> {{ item.title }}</div>
+                {% endfor %}
+                {% else %}
+                <div class="ecosystem-item"><i class="fas fa-check-circle"></i> Competitions</div>
+                <div class="ecosystem-item"><i class="fas fa-check-circle"></i> Training & professional development
+                </div>
+                <div class="ecosystem-item"><i class="fas fa-check-circle"></i> Digital certificates</div>
+                <div class="ecosystem-item"><i class="fas fa-check-circle"></i> Partner portals</div>
+                <div class="ecosystem-item"><i class="fas fa-check-circle"></i> Exhibitions & expos</div>
+                <div class="ecosystem-item"><i class="fas fa-check-circle"></i> Leaderboards</div>
+                <div class="ecosystem-item"><i class="fas fa-check-circle"></i> Learning modules</div>
+                <div class="ecosystem-item"><i class="fas fa-check-circle"></i> Registration & ticketing</div>
+                <div class="ecosystem-item"><i class="fas fa-check-circle"></i> Community engagement</div>
+                {% endif %}
+            </div>
+            <p class="text-center fw-700 text-primary mt-30">A truly all-in-one
+                system built to empower learning at scale.</p>
+        </div>
+
+        <!-- Key Features Grid -->
+        <div class="block-lg">
+            <h3 class="mb-40 reveal">🔑 KEY FEATURES OF THE PLATFORM</h3>
+            <div class="grid-3">
+                {% if sections.get('features') and sections['features'].items.count() %}
+                {% for item in sections['features'].items|sort(attribute='order') %}
+                <div class="digital-feature-card">
+                    <h3>{{ item.title }}</h3>
+                    {% if item.subtitle %}<p class="mb-15 fw-600">{{ item.subtitle }}</p>{% endif %}
+                    {% if item.content %}
+                    <ul>
+                        {% for line in item.content.split('\n') %}
+                        {% if line.strip() %}<li>{{ line.strip() }}</li>{% endif %}
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% else %}
+                <!-- 1 -->
+                <div class="digital-feature-card">
+                    <h3>1. Online Competition Portal</h3>
+                    <p class="mb-15 fw-600">A dedicated space for:</p>
+                    <ul>
+                        <li>Live online rounds</li>
+                        <li>Practice quizzes and preparatory activities</li>
+                        <li>Automated scoring</li>
+                        <li>Virtual stages</li>
+                        <li>Regional and international competitions</li>
+                    </ul>
+                    <p class="mt-15 italic">Ideal for Neural Interface Bootcamp, Quantum Computing League,
+                        Cybernetics Challenge, and more.</p>
+                </div>
+                <!-- 2 -->
+                <div class="digital-feature-card">
+                    <h3>2. Learning & Training Hub</h3>
+                    <p class="mb-15 fw-600">A digital classroom for:</p>
+                    <ul>
+                        <li>Professional development courses</li>
+                        <li>Workshops and webinars</li>
+                        <li>On-demand video lessons</li>
+                        <li>Downloadable toolkits and templates</li>
+                        <li>Certification badges for teachers, coordinators, and school leaders</li>
+                    </ul>
+                    <p class="mt-15">Participants can track their progress and earn verified certificates
+                        issued digitally.</p>
+                </div>
+                <!-- 3 -->
+                <div class="digital-feature-card">
+                    <h3>3. Smart Registration & Management System</h3>
+                    <p class="mb-15 fw-600">For all programs:</p>
+                    <ul>
+                        <li>Competition entry</li>
+                        <li>Training enrollment</li>
+                        <li>Event ticketing</li>
+                        <li>Exhibitor and sponsor registration</li>
+                        <li>Ambassador school onboarding</li>
+                    </ul>
+                    <p class="mt-15">Automated notifications ensure smooth communication and efficient
+                        workflow.</p>
+                </div>
+                <!-- 4 -->
+                <div class="digital-feature-card">
+                    <h3>4. Digital Credentialing & Certificates</h3>
+                    <p class="mb-15 fw-600">Nebula issues:</p>
+                    <ul>
+                        <li>Digital certificates</li>
+                        <li>Achievement badges</li>
+                        <li>Participation transcripts</li>
+                    </ul>
+                    <p class="mt-15">Each certificate contains a unique ID, making it verifiable and
+                        internationally recognized.</p>
+                </div>
+                <!-- 5 -->
+                <div class="digital-feature-card">
+                    <h3>5. Virtual Exhibitions & Tech Expos</h3>
+                    <p class="mb-15 fw-600">Schools, universities, publishers, and education
+                        companies can:</p>
+                    <ul>
+                        <li>Host digital booths</li>
+                        <li>Share videos and brochures</li>
+                        <li>Engage with attendees</li>
+                        <li>Collect leads and inquiries</li>
+                    </ul>
+                    <p class="mt-15">This expands exposure beyond physical events, enabling global
+                        participation.</p>
+                </div>
+                <!-- 6 -->
+                <div class="digital-feature-card">
+                    <h3>6. Leaderboards & Achievement Dashboards</h3>
+                    <p class="mb-15 fw-600">Students and schools can view:</p>
+                    <ul>
+                        <li>Competition rankings</li>
+                        <li>Performance analytics</li>
+                        <li>Achievement levels</li>
+                        <li>Country and region-based comparisons</li>
+                    </ul>
+                    <p class="mt-15">This builds healthy competition and motivates continuous learning.</p>
+                </div>
+                <!-- 7 -->
+                <div class="digital-feature-card col-span-all">
+                    <h3>7. Partner & Ambassador Portals</h3>
+                    <p class="mb-15 fw-600">Schools and organizations will have:</p>
+                    <ul>
+                        <li>Exclusive dashboards</li>
+                        <li>Partnership benefits</li>
+                        <li>Access to resource libraries</li>
+                        <li>Priority event registration</li>
+                        <li>Sponsorship opportunities</li>
+                    </ul>
+                    <p class="mt-15">A space for deeper collaboration and long-term engagement.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Coming Soon -->
+        <div class="app-box reveal">
+            <i class="fas fa-rocket feature-icon feature-icon--lg"></i>
+            <h3 class="mb-20">🚀 COMING SOON: THE NEBULA APP</h3>
+            <p>A mobile version of the platform will soon offer:</p>
+            <div class="app-grid">
+                {% if sections.get('app_features') and sections['app_features'].items.count() %}
+                {% for item in sections['app_features'].items|sort(attribute='order') %}
+                <div class="app-item"><i class="{{ item.icon or 'fas fa-check' }} feature-icon--primary"></i> {{ item.title }}</div>
+                {% endfor %}
+                {% else %}
+                <div class="app-item"><i class="fas fa-bolt feature-icon--primary"></i> Daily quizzes</div>
+                <div class="app-item"><i class="fas fa-gamepad feature-icon--primary"></i> Vocabulary and math
+                    games</div>
+                <div class="app-item"><i class="fas fa-bullhorn feature-icon--primary"></i> Event updates</div>
+                <div class="app-item"><i class="fas fa-chart-line feature-icon--primary"></i> Personal learning
+                    progress tracking</div>
+                <div class="app-item"><i class="fas fa-bell feature-icon--primary"></i> Notifications and
+                    reminders</div>
+                {% endif %}
+            </div>
+            <p class="mt-20 fw-700">Designed to make learning accessible anytime, anywhere.</p>
+        </div>
+
+        <!-- Security -->
+        <div class="security-box reveal">
+            <i class="fas fa-shield-alt feature-icon feature-icon--lg feature-icon--accent"></i>
+            <h3 class="mb-20">🛡️ DATA SECURITY & COMPLIANCE</h3>
+            <p class="mb-30">We prioritize:</p>
+            <div class="grid-3 text-left">
+                {% if sections.get('security') and sections['security'].items.count() %}
+                {% for item in sections['security'].items|sort(attribute='order') %}
+                <ul class="checklist">
+                    <li><i class="{{ item.icon or 'fas fa-check' }}"></i> {{ item.title }}</li>
+                </ul>
+                {% endfor %}
+                {% else %}
+                <ul class="checklist">
+                    <li><i class="fas fa-user-shield"></i> Privacy protection</li>
+                    <li><i class="fas fa-credit-card"></i> Secure payment processing</li>
+                </ul>
+                <ul class="checklist">
+                    <li><i class="fas fa-lock"></i> Encrypted user data</li>
+                    <li><i class="fas fa-child"></i> Child safety protocols for minors</li>
+                </ul>
+                <ul class="checklist">
+                    <li><i class="fas fa-file-contract"></i> Compliance with Japan, EU (GDPR), and global standards</li>
+                </ul>
+                {% endif %}
+            </div>
+            <p class="mt-30 lead-text fw-700">Your trust is our commitment.</p>
+        </div>
+
+        <!-- Promise -->
+        <div class="promise-box mt-60 reveal">
+            <h3 class="mb-20">🌈 THE NEBULA DIGITAL PROMISE</h3>
+            <p class="lead-lg text-primary mb-10">Every learner. Every educator.
+                Every institution. One platform. Endless possibilities.</p>
+            <p>Our digital ecosystem ensures that excellence isn't limited by geography — it is accessible to all.</p>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,177 @@
+{% extends "admin/base.html" %}
+{% block page_title %}System Overview{% endblock %}
+
+{% block content %}
+<!-- WELCOME BANNER -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="dashboard-card bg-primary text-white" style="border: none; background: linear-gradient(135deg, var(--primary) 0%, #001f3f 100%);">
+            <h2 class="fw-bold mb-2">Welcome back, Administrator.</h2>
+            <p class="mb-0" style="color: rgba(255,255,255,0.8);">Here is the current state of the Nebula platform. You have {{ stats.inquiries }} new inquiries awaiting your review.</p>
+        </div>
+    </div>
+</div>
+
+<!-- DASHBOARD STATS (Reduced size, more dense) -->
+<div class="dashboard" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+    <!-- PAGES -->
+    <a href="{{ url_for('admin.list_pages') }}" class="dashboard-card card-primary py-3">
+        <div class="card-header-flex mb-1">
+            <h6 class="card-title text-muted fw-normal" style="font-size: 0.85rem; text-transform: uppercase;">Total Pages</h6>
+            <i class="fas fa-file-alt text-primary"></i>
+        </div>
+        <div class="card-value fs-3 mb-0">{{ stats.pages }}</div>
+    </a>
+    <!-- PROGRAMS -->
+    <a href="{{ url_for('admin.list_programs') }}" class="dashboard-card card-secondary py-3">
+        <div class="card-header-flex mb-1">
+            <h6 class="card-title text-muted fw-normal" style="font-size: 0.85rem; text-transform: uppercase;">Programs</h6>
+            <i class="fas fa-chalkboard-teacher text-secondary"></i>
+        </div>
+        <div class="card-value fs-3 mb-0">{{ stats.programs }}</div>
+    </a>
+    <!-- PARTNERSHIPS -->
+    <a href="{{ url_for('admin.list_partnerships') }}" class="dashboard-card card-accent py-3">
+        <div class="card-header-flex mb-1">
+            <h6 class="card-title text-muted fw-normal" style="font-size: 0.85rem; text-transform: uppercase;">Partnerships</h6>
+            <i class="fas fa-handshake" style="color: var(--accent);"></i>
+        </div>
+        <div class="card-value fs-3 mb-0">{{ stats.partnerships }}</div>
+    </a>
+    <!-- INQUIRIES -->
+    <a href="{{ url_for('admin.list_inquiries') }}" class="dashboard-card card-danger py-3" style="border-top-color: var(--danger);">
+        <div class="card-header-flex mb-1">
+            <h6 class="card-title text-muted fw-normal" style="font-size: 0.85rem; text-transform: uppercase;">New Inquiries</h6>
+            <i class="fas fa-inbox text-danger"></i>
+        </div>
+        <div class="card-value fs-3 mb-0">{{ stats.inquiries }}</div>
+    </a>
+</div>
+
+<div class="row mt-4">
+    <!-- CHART SECTION -->
+    <div class="col-lg-8 mb-4">
+        <div class="dashboard-card h-100">
+            <h5 class="card-title mb-4">Content Distribution</h5>
+            <div style="position: relative; height:300px; width:100%">
+                <canvas id="contentChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="col-lg-4 mb-4">
+        <div class="dashboard-card h-100">
+            <h5 class="card-title mb-4">Quick Actions</h5>
+            <div class="d-grid gap-3">
+                <a href="{{ url_for('admin.create_program') }}" class="btn btn-outline-primary d-flex align-items-center justify-content-between p-3 rounded-3 border-1">
+                    <span class="fw-semibold">Add New Program</span>
+                    <i class="fas fa-plus-circle"></i>
+                </a>
+                <a href="{{ url_for('admin.create_news') }}" class="btn btn-outline-secondary d-flex align-items-center justify-content-between p-3 rounded-3 border-1">
+                    <span class="fw-semibold">Publish Article</span>
+                    <i class="fas fa-pen-fancy"></i>
+                </a>
+                <a href="{{ url_for('admin.list_inquiries') }}" class="btn btn-outline-danger d-flex align-items-center justify-content-between p-3 rounded-3 border-1">
+                    <span class="fw-semibold">View Inquiries</span>
+                    <i class="fas fa-envelope-open-text"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- RECENT NEWS -->
+    <div class="col-12">
+        <div class="recent-activity">
+            <div class="card-header-flex">
+                <h5 class="card-title mb-0">Recent Articles</h5>
+                <a href="{{ url_for('admin.create_news') }}" class="btn btn-sm btn-primary">Post New</a>
+            </div>
+            
+            <div class="table-responsive mt-3">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for article in recent_news %}
+                        <tr>
+                            <td class="fw-medium">{{ article.title }}</td>
+                            <td>
+                                {% if article.date_published %}
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1 rounded-pill">Published</span>
+                                {% else %}
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 px-2 py-1 rounded-pill">Draft</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-muted">{{ article.date_published.strftime('%b %d, %Y') if article.date_published else '-' }}</td>
+                            <td class="text-end">
+                                <a href="{{ url_for('admin.edit_news', id=article.id) }}" class="btn btn-sm btn-light border"><i class="fas fa-edit"></i> Edit</a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="4" class="text-center text-muted py-4">No recent articles found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('contentChart').getContext('2d');
+        const contentChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Pages', 'Programs', 'Partnerships', 'Team', 'Sponsors'],
+                datasets: [{
+                    label: 'System Content Count',
+                    data: [
+                        {{ stats.pages }}, 
+                        {{ stats.programs }}, 
+                        {{ stats.partnerships }}, 
+                        {{ stats.team }}, 
+                        {{ stats.sponsors }}
+                    ],
+                    backgroundColor: [
+                        'rgba(0, 46, 93, 0.8)',
+                        'rgba(0, 168, 204, 0.8)',
+                        'rgba(212, 175, 55, 0.8)',
+                        'rgba(23, 162, 184, 0.8)',
+                        'rgba(108, 117, 125, 0.8)'
+                    ],
+                    borderRadius: 6,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [2, 4], color: '#e2e8f0' },
+                        border: { display: false }
+                    },
+                    x: {
+                        grid: { display: false },
+                        border: { display: false }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

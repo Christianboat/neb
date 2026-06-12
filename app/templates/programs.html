@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}Programs & Services | Nebula Cybernetics Academy{% endblock %}
+{% block description %}Explore Nebula' 360° technological ecosystem: robotics competitions, professional development,
+awards, tech expos, and custom programs.{% endblock %}
+
+{% block content %}
+<!-- DETAILED PROGRAMS (Full Content) -->
+<section id="programs-detailed" class="section-alt">
+    <div class="container">
+        <div class="section-header reveal">
+            <p class="eyebrow">Programs & Services</p>
+            <h2>{{ page.hero_title|safe if page and page.hero_title else 'A 360° Educational and Professional
+                Development Ecosystem' }}</h2>
+            {% if sections and sections.intro %}
+            {{ sections.intro.content | safe }}
+            {% else %}
+            <p>At Nebula Cybernetics Academy, we believe that excellence thrives when people are given platforms to
+                learn, compete, innovate, network, and grow.</p>
+            <p>Our programs are designed for students, educators, school leaders, institutions, and professionals,
+                ensuring that every stage of education and career development is supported.</p>
+            <p class="mt-20"><strong>Below is an overview of our core offerings:</strong></p>
+            {% endif %}
+        </div>
+
+        <!-- NEW 6-TAB NAVIGATION -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" data-tab="youth-tab">Robotics Competitions</button>
+            <button class="tab-btn" data-tab="prodev-tab">Professional Dev</button>
+            <button class="tab-btn" data-tab="awards-tab">Awards</button>
+            <button class="tab-btn" data-tab="fairs-tab">Tech Expos</button>
+            <button class="tab-btn" data-tab="services-tab">360° Services</button>
+            <button class="tab-btn" data-tab="custom-tab">Custom Design</button>
+        </div>
+
+        <!-- 1. ROBOTICS COMPETITIONS -->
+        <div id="youth-tab" class="tab-content active">
+            <div class="block-md">
+                <h3>ROBOTICS COMPETITIONS & TECH EVENTS</h3>
+                <p><strong>Where talent is discovered and celebrated.</strong></p>
+                <p>Our youth events are designed to spark curiosity, build confidence, and develop critical thinking and
+                    communication skills. These competitions bring together students from diverse backgrounds, promoting
+                    global exposure and community-building.</p>
+            </div>
+            <div class="grid-3">
+                {% for program in programs if program.category == 'youth_competitions' %}
+                {% include 'partials/program_card_compact.html' %}
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container">
+        <!-- 2. PROFESSIONAL DEVELOPMENT -->
+        <div id="prodev-tab" class="tab-content">
+            {% set pro_dev_programs = programs|selectattr('category', 'equalto', 'professional_dev')|list %}
+            {% if pro_dev_programs %}
+            {% for program in pro_dev_programs %}
+            <div class="block-md">
+                <h3>{{ program.name|upper }}</h3>
+                <p><strong>{{ program.description|safe }}</strong></p>
+            </div>
+            <div class="pro-dev-grid">
+                {% for sub in program.subcontents.order_by(ProgramSubContent.order.asc()) %}
+                {% if "includes" not in sub.title|lower %}
+                <div class="tab-sub-section">
+                    <h4><i class="fas fa-chevron-circle-right icon-prefix"></i>
+                        {{ sub.title }}:</h4>
+                    {% if '<' in sub.content and '>' in sub.content %} <div class="rich-text-content">{{
+                        sub.content|safe
+                        }}
+                </div>
+                {% else %}
+                <ul class="impact-list">
+                    {% for item in sub.content.split('\n') %}
+                    {% if item.strip() %}
+                    <li>{{ item.strip() }}</li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        {% for sub in program.subcontents if "includes" in sub.title|lower %}
+        <div class="info-panel--accent mt-30">
+            <h4 class="mb-15">{{ sub.title }}</h4>
+            <div class="grid grid-cols-200">
+                <ul class="checklist">
+                    {% for item in sub.content.split('\n') %}
+                    {% if item.strip() %}
+                    <li><i class="fas fa-check-circle"></i> {{ item.strip() }}</li>
+                    {% if loop.index is divisibleby 2 and not loop.last %}
+                </ul>
+                <ul class="checklist">{% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endfor %}
+        {% endfor %}
+        {% else %}
+        <div class="text-center py-5">
+            <p class="text-muted">Professional Development programs coming soon.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- 3. AWARDS -->
+    <div id="awards-tab" class="tab-content">
+        <div class="block-md">
+            <h3>AWARDS & RECOGNITION PROGRAMS</h3>
+            <p><strong>Celebrating excellence in education, leadership, innovation, and community impact.</strong>
+            </p>
+            <p>Nebula believes that outstanding work should be recognized and celebrated. Our awards programs
+                shine
+                a spotlight on individuals and institutions shaping the future.</p>
+        </div>
+        <div class="grid-2">
+            {% for program in programs if program.category == 'awards' %}
+            {% include 'partials/program_card_compact.html' %}
+            {% endfor %}
+        </div>
+        <p class="mt-30 italic text-center">These awards build aspiration and
+            foster a culture of appreciation, excellence, and continuous improvement.</p>
+    </div>
+
+    <!-- 4. TECH EXPOS -->
+    <div id="fairs-tab" class="tab-content">
+        <div class="block-md">
+            <h3>EDUCATION TECH EXPOS & EXPOS</h3>
+            <p><strong>Connecting education stakeholders, innovators, and partners.</strong></p>
+            <p>Nebula organizes exhibitions that bring together schools, universities, edtech companies,
+                publishers, service providers, and parents.</p>
+        </div>
+        <div class="block-md">
+            <h4 class="mb-20">Key Events:</h4>
+            <div class="grid-3">
+                {% for program in programs if program.category == 'trade_fairs' %}
+                {% include 'partials/program_card_compact.html' %}
+                {% endfor %}
+            </div>
+        </div>
+        <p class="note-panel">These platforms
+            enhance visibility, partnership opportunities, and community engagement across the educational
+            ecosystem.</p>
+    </div>
+
+    <!-- 5. 360 SERVICES -->
+    <div id="services-tab" class="tab-content">
+        {% set services_programs = programs|selectattr('category', 'equalto', 'services')|list %}
+        {% if services_programs %}
+        {% for program in services_programs %}
+        <div class="block-md">
+            <h3>{{ program.name|upper }}</h3>
+            <p><strong>{{ program.description|safe }}</strong></p>
+        </div>
+        <div class="mb-20">
+            {% for sub in program.subcontents.order_by(ProgramSubContent.order.asc()) %}
+            <h4 class="mb-15">{{ sub.title }}</h4>
+            <div class="pro-dev-grid">
+                {% if '<' in sub.content and '>' in sub.content %} <div class="rich-text-content">{{
+                    sub.content|safe }}
+            </div>
+            {% else %}
+            <ul class="impact-list">
+                {% for item in sub.content.split('\n') %}
+                {% if item.strip() %}
+                <li>{{ item.strip() }}</li>
+                {% if loop.index is divisibleby 4 and not loop.last %}
+            </ul>
+            <ul class="impact-list">{% endif %}
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="text-center py-5">
+        <p class="text-muted">360° Educational Services coming soon.</p>
+    </div>
+    {% endif %}
+    </div>
+
+    <!-- 6. CUSTOM PROGRAM DESIGN -->
+    <div id="custom-tab" class="tab-content">
+        <div class="block-md">
+            <h3>CUSTOM PROGRAM DESIGN</h3>
+            <p><strong>Tailored solutions for schools, corporations, and development partners.</strong></p>
+            <p>Nebula can design customized:</p>
+        </div>
+        <div class="grid-3 mb-30">
+            {% for program in programs if program.category == 'custom_design' %}
+            {% include 'partials/program_card_compact.html' %}
+            {% endfor %}
+        </div>
+        <p class="text-center fw-700 text-primary">We collaborate with schools, NGOs,
+            corporate CSR programs, education ministries, and embassies.</p>
+    </div>
+    </div>
+    </div>
+
+    <!-- PROMISE OUTRO -->
+    <div class="container mt-60">
+        <div class="cta-panel reveal">
+            <h3>{{ sections.promise.title if sections and sections.promise else 'THE NEBULA PROMISE' }}</h3>
+            <p>{{ (sections.promise.content | safe) if sections and sections.promise else 'To deliver world-class
+                educational and professional platforms that inspire excellence, unlock potential, and connect people
+                across the globe.' }}</p>
+            <a href="{{ url_for('main.join') }}" class="btn btn-gold">Get Started</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

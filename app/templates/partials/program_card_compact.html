@@ -1,0 +1,16 @@
+<article class="flagship-card">
+    {% if program.image_filename %}
+    <img src="{{ url_for('static', filename='uploads/programs/' + program.image_filename) }}"
+        alt="{{ program.name|safe }}" class="card-img card-img--compact" loading="lazy">
+    {% elif program.icon %}
+    <i class="{{ program.icon }} card-icon-inline"></i>
+    {% endif %}
+    <h4 class="card-title-sm">{{ program.name|safe }}</h4>
+    <p class="card-excerpt-loose">
+        {{ program.excerpt if program.excerpt else (program.description[:150] + '...' if program.description and
+        program.description|length > 150 else program.description)|safe }}
+    </p>
+    <a href="{{ program.detail_url }}" class="btn-text-link">
+        Learn More <i class="fas fa-arrow-right"></i>
+    </a>
+</article>

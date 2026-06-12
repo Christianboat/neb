@@ -1,0 +1,148 @@
+{% extends "admin/base.html" %}
+{% import "admin/_macros.html" as macros %}
+
+{% block page_title %}{% if legend %}{{ legend }}{% else %}Edit Program{% endif %}{% endblock %}
+
+{% block content %}
+<div class="section-editor">
+    <div class="editor-header">
+        <h3><i class="fas fa-chalkboard-teacher"></i> Program Details</h3>
+        <div class="editor-actions">
+            <!-- Actions can go here if needed -->
+        </div>
+    </div>
+    <div class="editor-content">
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+
+            <div class="row">
+                <div class="col-md-8">
+                    {{ macros.render_field(form.name) }}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ macros.render_field(form.slug) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ macros.render_field(form.type) }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ macros.render_field(form.category) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ macros.render_field(form.icon) }}
+                        </div>
+                    </div>
+
+                    {% if program %}{{ macros.current_image(program.image_filename, 'programs', 'Current program image') }}{% endif %}
+                    {{ macros.render_field(form.image) }}
+                    {{ macros.render_field(form.excerpt) }}
+                    {{ macros.render_field(form.description, rows=5, class="summernote") }}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ macros.render_field(form.cta_url) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ macros.render_field(form.cta_text) }}
+                        </div>
+                    </div>
+
+                    <div class="card bg-light border p-3 mb-4">
+                        <div class="form-check form-switch">
+                            {{ form.is_featured(class="form-check-input") }}
+                            {{ form.is_featured.label(class="form-check-label h6 mb-0 ms-2") }}
+                        </div>
+                        <small class="text-muted d-block mt-1 ms-4 ps-2">If enabled, this program will appear in the
+                            "Flagship Programs" highlight section on the homepage.</small>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4 pb-4 border-bottom">
+                        {{ form.submit(class="btn btn-primary px-4") }}
+                        <a href="{{ url_for('admin.list_programs') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+
+                    {% if program and program.id %}
+                    <div class="mt-5">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4><i class="fas fa-list-ul"></i> Program Sub-Items (Modules/Lists)</h4>
+                            <a href="{{ url_for('admin.create_program_subcontent', program_id=program.id) }}"
+                                class="btn btn-sm btn-success">
+                                <i class="fas fa-plus"></i> Add Sub-Item
+                            </a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover border">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th width="60">Order</th>
+                                        <th>Title</th>
+                                        <th>Details</th>
+                                        <th width="100">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for sub in subcontents %}
+                                    <tr>
+                                        <td>{{ sub.order }}</td>
+                                        <td><strong>{{ sub.title or 'Items List' }}</strong></td>
+                                        <td>
+                                            <small class="text-muted">{{ sub.content[:50] }}...</small>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="{{ url_for('admin.edit_program_subcontent', id=sub.id) }}"
+                                                    class="btn btn-link py-0">Edit</a>
+                                                <form
+                                                    action="{{ url_for('admin.delete_program_subcontent', id=sub.id) }}"
+                                                    method="POST" class="d-inline"
+                                                    onsubmit="return confirm('Delete this item?');">
+                                                    <button type="submit"
+                                                        class="btn btn-link text-danger py-0">Remove</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-center py-3 text-muted">No details added yet. Use
+                                            sub-items for modules, focus areas, or checklists.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card bg-light border-0">
+                        <div class="card-body">
+                            <h5><i class="fas fa-info-circle"></i> Management Tips</h5>
+                            <p class="small text-muted">You now manage all programs from this single list.</p>
+
+                            <p class="small text-muted">Use the <strong>"Featured"</strong> switch to highlight special
+                                programs on the homepage grid.</p>
+
+                            <hr>
+
+                            <h6>Icon Reference</h6>
+                            <p class="small mb-2">Use FontAwesome 5 classes:</p>
+                            <ul class="small mb-0 ps-3">
+                                <li><code>fas fa-spell-check</code></li>
+                                <li><code>fas fa-chalkboard-teacher</code></li>
+                                <li><code>fas fa-trophy</code></li>
+                                <li><code>fas fa-leaf</code></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

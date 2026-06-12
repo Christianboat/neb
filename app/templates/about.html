@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}About Us | Nebula Cybernetics Academy{% endblock %}
+{% block description %}Learn about Nebula Cybernetics Academy - our mission, vision, values, leadership, and impact in
+global education.{% endblock %}
+
+{% block content %}
+<!-- ABOUT US FULL PAGE -->
+<section id="about-full">
+    <div class="container">
+        <!-- About Intro -->
+        <div class="section-header reveal mb-30">
+            <h2>{{ page.hero_title|safe if page else 'Shaping Excellence. Inspiring Futures.' }}</h2>
+        </div>
+
+        <div class="grid-2 about-intro-grid mb-80">
+            <div>
+                {% if sections and sections.intro %}
+                {{ sections.intro.content | safe }}
+                {% else %}
+                <p>Nebula Cybernetics Academy is a Neo-Tokyo-based international education and events organization committed
+                    to creating platforms that unlock human potential. We believe that excellence should be accessible,
+                    celebrated, and nurtured whether it appears in a classroom, a boardroom, a training hall, or a
+                    global stage.</p>
+                <p>Our name, <strong>Nebula</strong>, reflects the heart of our mission: a birthplace of new stars and ideas, helping individuals and institutions discover, refine, and showcase their technical brilliance.</p>
+                <p>From robotics competitions to professional development programs, tech expos to international awards,
+                    Nebula stands as a global connector between learning, leadership, innovation, and opportunity.</p>
+                {% endif %}
+            </div>
+            <div>
+                {% if sections and sections.intro.video_url %}
+                <div class="video-embed">
+                    <iframe src="{{ sections.intro.video_url | youtube_embed }}"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                {% elif sections and sections.intro.image_filename %}
+                <img src="{{ url_for('static', filename='uploads/sections/' + sections.intro.image_filename) }}"
+                    alt="Global Education" class="rounded-media">
+                {% else %}
+                <img src="{{ url_for('static', filename='img/placeholder.png') }}" loading="lazy"
+                    alt="Global Education" class="rounded-media">
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Our Journey -->
+        <div class="info-panel reveal">
+            <h3 class="text-primary mb-20">OUR JOURNEY</h3>
+            {% if sections and sections.journey %}
+            {{ sections.journey.content | safe }}
+            {% else %}
+            <p>Nebula started with a simple yet profound realization: The world is full of brilliance — but brilliance
+                needs opportunity.</p>
+            <p>Initially rooted in language and learning initiatives like the Neural Interface Bootcamp, organization quickly
+                evolved as its founders saw a larger need: schools needed capacity-building, educators needed modern
+                training, professionals needed recognition, and institutions needed platforms to collaborate and
+                innovate.</p>
+            <p>Neo-Tokyo, a global crossroads of ideas and ambition became the perfect home for building an organization
+                with an international footprint. Today, Nebula is expanding across regions including the Middle East,
+                South Asia, and Africa, uniting students, educators, institutions, and professionals under one ecosystem
+                of growth and excellence.</p>
+            {% endif %}
+        </div>
+
+        <!-- Vision & Mission -->
+        <div class="grid-2 mb-80">
+            <div class="flagship-card flagship-card--navy">
+                <i class="fas fa-eye feature-icon--accent"></i>
+                <h3>OUR VISION</h3>
+                <p>
+                    {% if sections and sections.vision %}
+                    {{ sections.vision.content | striptags }}
+                    {% else %}
+                    To become a leading global platform for nurturing excellence, empowering talent, and advancing
+                    educational and professional innovation.
+                    {% endif %}
+                </p>
+            </div>
+            <div class="flagship-card flagship-card--teal">
+                <i class="fas fa-rocket text-white"></i>
+                <h3>OUR MISSION</h3>
+                <p>
+                    {% if sections and sections.mission %}
+                    {{ sections.mission.content | striptags }}
+                    {% else %}
+                    To inspire minds and connect worlds through impactful programs, competitions, learning experiences,
+                    and capacity-building initiatives that elevate both individuals and institutions.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <!-- Core Values -->
+        <div class="section-header reveal">
+            <h3>OUR CORE VALUES</h3>
+        </div>
+        <div class="grid mb-80">
+            {% if sections.get('values') and sections['values'].items.count() %}
+            {% for item in sections['values'].items|sort(attribute='order') %}
+            <div class="value-card">
+                {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
+                <h4>{{ item.title }}</h4>
+                <p>{{ item.content }}</p>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="value-card">
+                <i class="fas fa-star"></i>
+                <h4>Excellence</h4>
+                <p>We strive for quality in every program, leaning into belief that excellence is a journey that grows
+                    with opportunity.</p>
+            </div>
+            <div class="value-card">
+                <i class="fas fa-lightbulb"></i>
+                <h4>Innovation</h4>
+                <p>We embrace new ideas, technologies, and methods to reimagine education, events, and professional
+                    development.</p>
+            </div>
+            <div class="value-card">
+                <i class="fas fa-balance-scale"></i>
+                <h4>Integrity</h4>
+                <p>We operate with transparency, fairness, and respect in every partnership and engagement.</p>
+            </div>
+            <div class="value-card">
+                <i class="fas fa-users"></i>
+                <h4>Inclusion</h4>
+                <p>We believe every person — regardless of age, background, or circumstance — deserves access to
+                    high-quality learning and recognition.</p>
+            </div>
+            <div class="value-card">
+                <i class="fas fa-globe"></i>
+                <h4>Global Collaboration</h4>
+                <p>We build bridges across borders, enabling shared learning, cultural exchange, and international
+                    opportunity.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Leadership -->
+        <div class="section-header reveal">
+            <h3>OUR LEADERSHIP</h3>
+        </div>
+        <div class="grid-3 mb-80">
+            {% if team_members %}
+            {% for member in team_members %}
+            <div class="leader-card">
+                {% if member.image_filename %}
+                <img src="{{ url_for('static', filename='uploads/team/' + member.image_filename) }}"
+                    alt="{{ member.name }}" class="leader-img">
+                {% else %}
+                <img src="{{ member.photo_url or url_for('static', filename='img/avatar-placeholder.png') }}"
+                    alt="{{ member.name }}" loading="lazy" class="leader-img">
+                {% endif %}
+                <span class="leader-role">{{ member.title }}</span>
+                <h4>{{ member.name }}</h4>
+                <p class="leader-bio">{{ member.bio|safe }}</p>
+            </div>
+            {% endfor %}
+            {% else %}
+            <!-- Hardcoded fallback -->
+            <div class="leader-card">
+                <img src="{{ url_for('static', filename='img/avatar-placeholder.png') }}"
+                    alt="Mrs. Christabel Vida Botchey" loading="lazy" class="leader-img">
+                <span class="leader-role">Chairperson of Board</span>
+                <h4>Mrs. Christabel Vida Botchey</h4>
+                <p class="leader-bio">A visionary leader with a commitment to educational transformation, Mrs.
+                    Botchey brings strategic direction, governance leadership, and global perspective to organization.
+                </p>
+            </div>
+            <div class="leader-card">
+                <img src="{{ url_for('static', filename='img/avatar-placeholder.png') }}" alt="Mrs. Bridget Lartey"
+                    loading="lazy" class="leader-img">
+                <span class="leader-role">Managing Director (Operational Lead)</span>
+                <h4>Mrs. Bridget Lartey</h4>
+                <p class="leader-bio">With extensive experience in operations and program coordination, she
+                    oversees execution of all Nebula initiatives, ensuring seamless delivery and organizational
+                    excellence.</p>
+            </div>
+            <div class="leader-card">
+                <img src="{{ url_for('static', filename='img/avatar-placeholder.png') }}"
+                    alt="Mrs. Juliana Awo Quist Lawson" loading="lazy" class="leader-img">
+                <span class="leader-role">Director, Partnerships & Communications</span>
+                <h4>Mrs. Juliana Awo Quist Lawson</h4>
+                <p class="leader-bio">A global education and sustainability professional, she leads partnership
+                    development, sponsorship strategy, and brand narrative of Nebula across international markets.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Impact & Promise -->
+        <div class="grid-2">
+            <div>
+                <h3>OUR IMPACT</h3>
+                <p class="mb-20">We are proud to be building an technological ecosystem that includes:</p>
+                <ul class="impact-list">
+                    <li>International robotics competitions</li>
+                    <li>Professional development programs for educators and leaders</li>
+                    <li>School & institutional partnerships</li>
+                    <li>Awards and recognition platforms</li>
+                    <li>Trade fairs and technology exhibitions</li>
+                    <li>360° educational consulting and services</li>
+                    <li>Digital learning and event platforms</li>
+                </ul>
+                <p class="mt-20 italic">Nebula is not just an events company — it is a
+                    movement that celebrates talent, builds capacity, and strengthens educational communities worldwide.
+                </p>
+            </div>
+            <div class="promise-panel">
+                <h3 class="text-accent">OUR PROMISE</h3>
+                <p class="text-white lead-text mt-10">To provide world-class platforms that
+                    unlock talent, elevate leadership, and inspire lifelong learning.</p>
+                <div class="mt-30">
+                    <a href="{{ url_for('main.join') }}" class="btn btn-gold">Join Our Mission</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

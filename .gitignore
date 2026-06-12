@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Flask / app
+instance/
+*.db
+*.sqlite
+*.sqlite3
+app.db
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# NOTE: app/static/uploads/ is intentionally tracked because it holds real
+# brand/content images (team photos, logos) that are not reproducible from
+# the seed script. Runtime uploads land here too.
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/

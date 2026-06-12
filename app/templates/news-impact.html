@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+
+{% block title %}News & Impact | Nebula Cybernetics Academy{% endblock %}
+{% block description %}Latest news, impact metrics, success stories, and testimonials from Nebula Cybernetics Academy'
+educational initiatives worldwide.{% endblock %}
+
+{% block content %}
+<!-- NEWS & IMPACT SECTION -->
+<section id="news-impact">
+    <div class="container">
+        <div class="section-header reveal">
+
+            <h2>{{ page.hero_title|safe if page else 'Celebrating Milestones. Sharing Stories. Measuring
+                Transformation.' }}
+            </h2>
+            {% if sections and sections.intro %}
+            {{ sections.intro.content | safe }}
+            {% else %}
+            <p>At Nebula Cybernetics Academy, every program, partnership, event, and achievement contributes to a larger
+                mission — to inspire minds, elevate education, and empower communities across the world.</p>
+            <p>Our News & Impact page showcases our journey, stories, and measurable outcomes that define who we are.
+            </p>
+            {% endif %}
+        </div>
+
+        <!-- LATEST NEWS & ANNOUNCEMENTS -->
+        <div class="mb-80" id="news-section">
+            <h3 class="news-block-title">📢 LATEST NEWS & ANNOUNCEMENTS</h3>
+            <div class="grid-3">
+                {% if news_articles %}
+                {% for article in news_articles %}
+                <div class="news-card">
+                    {% if article.image_filename %}
+                    <img src="{{ url_for('static', filename='uploads/news/' + article.image_filename) }}" loading="lazy"
+                        alt="{{ article.title }}" class="news-card__img">
+                    {% elif article.featured_image_url %}
+                    <img src="{{ article.featured_image_url }}" loading="lazy" alt="{{ article.title }}"
+                        class="news-card__img">
+                    {% endif %}
+                    <div class="news-card__body">
+                        <span class="news-tag">{{ article.category }}</span>
+                        <span class="news-date">{{ article.date_published.strftime('%b %Y') if article.date_published
+                            else '' }}</span>
+                        <h4>{{ article.title|safe }}</h4>
+                        <p>{{ article.content|striptags|truncate(100) }}</p>
+                        <a href="{{ url_for('main.news_detail', article_id=article.id) }}" class="btn-text-link">Read
+                            More</a>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="news-card">
+                    <span class="news-tag">Expansion</span>
+                    <span class="news-date">Dec 2024</span>
+                    <h4>Nebula Expands to New Regions</h4>
+                    <p>We are proud to announce new partnerships in South Asia and Africa, bringing our educational
+                        programs to thousands of new learners.</p>
+                    <a href="#" class="btn-text-link">Read More</a>
+                </div>
+                <div class="news-card">
+                    <span class="news-tag">Digital</span>
+                    <span class="news-date">Nov 2024</span>
+                    <h4>Launch of Nebula Digital Platform</h4>
+                    <p>Our new digital hub is now live, featuring online competitions, leaderboards, and a comprehensive
+                        resource library for schools.</p>
+                    <a href="#" class="btn-text-link">Explore Platform</a>
+                </div>
+                <div class="news-card">
+                    <span class="news-tag">Awards</span>
+                    <span class="news-date">Oct 2024</span>
+                    <h4>Excellence Awards Ceremony Success</h4>
+                    <p>Last month's award ceremony celebrated outstanding educators and students from over 50
+                        participating schools.</p>
+                    <a href="#" class="btn-text-link">View Photos</a>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if news_pagination and news_pagination.pages > 1 %}
+            <nav aria-label="News pagination" class="mt-40">
+                <ul class="pagination-list">
+                    {% if news_pagination.has_prev %}
+                    <li><a class="page-link-custom"
+                            href="{{ url_for('main.news_impact', page=news_pagination.prev_num) }}#news-section"><i
+                                class="fas fa-chevron-left"></i></a></li>
+                    {% endif %}
+                    {% for p in news_pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                    {% if p %}
+                    <li><a class="page-link-custom {% if p == news_pagination.page %}active{% endif %}"
+                            href="{{ url_for('main.news_impact', page=p) }}#news-section">{{ p }}</a></li>
+                    {% else %}
+                    <li><span class="page-link-custom disabled">…</span></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if news_pagination.has_next %}
+                    <li><a class="page-link-custom"
+                            href="{{ url_for('main.news_impact', page=news_pagination.next_num) }}#news-section"><i
+                                class="fas fa-chevron-right"></i></a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+
+        <!-- OUR IMPACT OVERVIEW & METRICS -->
+        <div class="mb-80">
+            <div class="impact-intro">
+                <h3>OUR IMPACT</h3>
+                <p><strong>The difference we make in classrooms, communities, and institutions.</strong></p>
+                <p>Nebula' work reaches across countries & regions, schools & academies, educators & professionals,
+                    students & young leaders, and corporate & institutional partners.</p>
+                <p>Our impact is felt through increased confidence among learners, stronger school capacities,
+                    recognized excellence through awards, enhanced collaboration across borders, accessible digital
+                    learning opportunities, empowered educators and leadership teams, and exposure to innovation through
+                    fairs and exhibitions.</p>
+                <p>We believe true impact is measured not just by numbers, but by lives transformed.</p>
+            </div>
+
+            <div class="grid-4">
+                {% if impact_metrics %}
+                {% for metric in impact_metrics %}
+                <div class="impact-metric-box">
+                    <i class="{{ metric.icon if metric.icon else 'fas fa-chart-bar' }}"></i>
+                    <h3>{{ metric.value }}</h3>
+                    <p>{{ metric.label }}</p>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="impact-metric-box">
+                    <i class="fas fa-globe"></i>
+                    <h3>12+</h3>
+                    <p>Countries Reached</p>
+                </div>
+                <div class="impact-metric-box">
+                    <i class="fas fa-school"></i>
+                    <h3>500+</h3>
+                    <p>Schools Partnered</p>
+                </div>
+                <div class="impact-metric-box">
+                    <i class="fas fa-user-graduate"></i>
+                    <h3>50k+</h3>
+                    <p>Students Impacted</p>
+                </div>
+                <div class="impact-metric-box">
+                    <i class="fas fa-handshake"></i>
+                    <h3>100+</h3>
+                    <p>Corporate Partners</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+
+
+        <!-- PHOTO & VIDEO HIGHLIGHTS (Dynamic Gallery Preview) -->
+        <div class="mt-80" id="gallery-section">
+            <div class="section-header section-header--left">
+                <h3>PHOTO & VIDEO HIGHLIGHTS</h3>
+                <p>A gallery showcasing our competitions, award ceremonies, workshops, and international engagements.
+                </p>
+            </div>
+
+            <div class="gallery-grid" id="dynamic-gallery">
+                {% if gallery_items %}
+                {% for item in gallery_items %}
+                <div class="gallery-item">
+                    {% if item.video_url %}
+                    <div class="video-embed">
+                        <iframe src="{{ item.video_url|youtube_embed }}" allowfullscreen></iframe>
+                    </div>
+                    {% else %}
+                    <img src="{{ url_for('static', filename='uploads/gallery/' + item.image_filename) }}"
+                        loading="lazy" alt="{{ item.title or 'Gallery highlight' }}">
+                    {% endif %}
+                    {% if item.title %}
+                    <div class="gallery-caption">{{ item.title }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="gallery-item">
+                    <img src="{{ url_for('static', filename='img/placeholder.png') }}" loading="lazy"
+                        alt="Gallery highlights coming soon">
+                    <div class="gallery-caption">Highlights coming soon</div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="text-center mt-40">
+                <a href="{{ url_for('main.gallery') }}" class="btn btn-outline-dynamic">View Full Gallery</a>
+            </div>
+        </div>
+
+        <style>
+            .btn-outline-dynamic {
+                border: 2px solid var(--primary);
+                color: var(--primary);
+                padding: 12px 35px;
+                font-weight: 700;
+                border-radius: 50px;
+                text-decoration: none;
+                display: inline-block;
+                transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+
+            .btn-outline-dynamic:hover {
+                background: var(--primary);
+                color: white !important;
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 46, 93, 0.2);
+            }
+        </style>
+
+        <!-- TESTIMONIALS -->
+        <div class="mt-80 mb-80">
+            <div class="section-header reveal">
+                <h3>TESTIMONIALS</h3>
+                <p>Real stories from students, parents, educators, school leaders, sponsors, and partners.</p>
+            </div>
+            <div class="grid-3">
+                {% if testimonials %}
+                {% for testimonial in testimonials %}
+                <div class="testimonial-card">
+                    <p>"{{ testimonial.content|safe }}"</p>
+                    <div class="testimonial-author">
+                        {% if testimonial.image_filename %}
+                        <img src="{{ url_for('static', filename='uploads/testimonials/' + testimonial.image_filename) }}"
+                            alt="{{ testimonial.author_name }}" class="author-img">
+                        {% elif testimonial.author_photo_url %}
+                        <img src="{{ testimonial.author_photo_url }}" alt="{{ testimonial.author_name }}"
+                            class="author-img">
+                        {% else %}
+                        <img src="{{ url_for('static', filename='img/avatar-placeholder.png') }}" loading="lazy"
+                            alt="{{ testimonial.author_name }}" class="author-img">
+                        {% endif %}
+                        <div>
+                            <h4>{{ testimonial.author_name }}</h4>
+                            <p class="author-role">{{ testimonial.author_role if testimonial.author_role else
+                                'Participant' }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="testimonial-card">
+                    <p>"The Neural Interface Bootcamp competition transformed my son's confidence. He used to be shy, but now he speaks
+                        in front of hundreds without fear. Thank you, Nebula!"</p>
+                    <div class="testimonial-author">
+                        <img src="{{ url_for('static', filename='img/avatar-placeholder.png') }}" loading="lazy"
+                            alt="Parent" class="author-img">
+                        <div>
+                            <h4>Sarah J.</h4>
+                            <p class="author-role">Parent</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p>"Partnering with Nebula has elevated our school's literacy programs significantly. The teacher
+                        training provided was world-class."</p>
+                    <div class="testimonial-author">
+                        <img src="{{ url_for('static', filename='img/avatar-placeholder.png') }}" loading="lazy"
+                            alt="Principal" class="author-img">
+                        <div>
+                            <h4>Dr. Ahmed K.</h4>
+                            <p class="author-role">School Principal</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p>"Nebula provides a fantastic platform for students to showcase their talent on a global stage.
+                        The organization is professional and impactful."</p>
+                    <div class="testimonial-author">
+                        <img src="{{ url_for('static', filename='img/avatar-placeholder.png') }}" loading="lazy"
+                            alt="Sponsor" class="author-img">
+                        <div>
+                            <h4>Michael R.</h4>
+                            <p class="author-role">Corporate Partner</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ANNUAL IMPACT REPORT -->
+        <div class="cta-panel reveal">
+            <h3>ANNUAL IMPACT REPORT</h3>
+            <p class="mb-15 fw-700">Coming Soon</p>
+            <p>Our yearly report will provide key statistics, program outcomes, regional highlights, school and
+                community feedback, and growth projections.</p>
+            <a href="{{ url_for('main.contact') }}" class="btn btn-gold">Notify Me When Released</a>
+        </div>
+
+        <!-- PROMISE -->
+        <div class="partner-promise-box mt-60">
+            <h3>THE NEBULA IMPACT PROMISE</h3>
+            <p>Everything we do must uplift, empower, inspire, and create pathways for excellence.</p>
+        </div>
+    </div>
+</section>
+
+<style>
+    .page-link-custom {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 42px;
+        height: 42px;
+        padding: 0 12px;
+        border-radius: 10px;
+        border: 2px solid #e6e9ef;
+        background: #fff;
+        color: var(--primary);
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .page-link-custom:hover {
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .page-link-custom.active {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+    }
+
+    .page-link-custom.disabled {
+        border-color: transparent;
+        background: transparent;
+        cursor: default;
+    }
+</style>
+{% endblock %}

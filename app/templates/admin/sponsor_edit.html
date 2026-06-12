@@ -1,0 +1,46 @@
+{% extends "admin/base.html" %}
+{% import "admin/_macros.html" as macros %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0 text-gray-800">{{ legend }}</h1>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form method="POST" action="" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label font-weight-bold">Sponsor Name</label>
+                        {{ form.name(class="form-control") }}
+                        {% if form.name.errors %}
+                        {% for error in form.name.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label font-weight-bold">Display Order</label>
+                        {{ form.order(class="form-control") }}
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label font-weight-bold">Sponsor Logo</label>
+                        {% if sponsor %}{{ macros.current_image(sponsor.logo_filename, 'sponsors', 'Current logo') }}{% endif %}
+                        {{ form.logo_file(class="form-control") }}
+                        <small class="text-muted">Upload a transparent PNG if possible for best results in the
+                            ticker.</small>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('admin.list_sponsors') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

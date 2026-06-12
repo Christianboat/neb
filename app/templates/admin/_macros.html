@@ -1,0 +1,28 @@
+{% macro current_image(filename, folder, label='Current image') %}
+<div class="current-image">
+    <span class="current-image__label">{{ label }}</span>
+    {% if filename %}
+    <div class="current-image__frame">
+        <img src="{{ url_for('static', filename='uploads/' + folder + '/' + filename) }}" alt="Current image">
+    </div>
+    {% else %}
+    <span class="current-image__none">No image uploaded yet — choose a file below to add one.</span>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro render_field(field) %}
+<div class="form-group mb-3">
+    {{ field.label(class="form-label") }}
+    {% set class_ = kwargs.pop('class', '') %}
+    {{ field(class="form-control " + class_, **kwargs) }}
+    {% if field.description %}
+    <span class="form-hint">{{ field.description }}</span>
+    {% endif %}
+    {% if field.errors %}
+    {% for error in field.errors %}
+    <div class="text-danger small mt-1">{{ error }}</div>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endmacro %}

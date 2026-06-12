@@ -1,0 +1,95 @@
+{% extends "admin/base.html" %}
+{% import "admin/_macros.html" as macros %}
+
+{% block page_title %}{% if legend %}{{ legend }}{% else %}Edit Partnership{% endif %}{% endblock %}
+
+{% block content %}
+<div class="section-editor">
+    <div class="editor-header">
+        <h3><i class="fas fa-handshake"></i> Partnership Details</h3>
+    </div>
+    <div class="editor-content">
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+
+            <div class="form-grid">
+                <div class="left-col">
+                    {{ macros.render_field(form.type) }}
+                    {{ macros.render_field(form.title) }}
+                    {{ macros.render_field(form.description) }}
+                    {{ macros.render_field(form.benefits) }}
+
+                    <div class="p-3 bg-light rounded mb-3 border">
+                        <h5 class="mb-3">Partner Logo</h5>
+                        {% if partner %}{{ macros.current_image(partner.image_filename, 'partners', 'Current logo') }}{% endif %}
+                        {{ macros.render_field(form.image_file) }}
+                        <p class="text-muted small mb-2">OR (Legacy URL)</p>
+                        {{ macros.render_field(form.logo_url) }}
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <a href="{{ url_for('admin.list_partnerships') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </div>
+
+                <div class="right-col">
+                    {% if partner and partner.type == 'corporate' %}
+                    <div class="card shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                            <h5 class="mb-0">Sponsorship Tiers</h5>
+                            <a href="{{ url_for('admin.create_tier', partnership_id=partner.id) }}"
+                                class="btn btn-sm btn-success">
+                                <i class="fas fa-plus"></i> Add Tier
+                            </a>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Tier Name</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for tier in tiers %}
+                                        <tr>
+                                            <td>{{ tier.tier_name }}</td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <a href="{{ url_for('admin.edit_tier', id=tier.id) }}"
+                                                        class="btn btn-link py-0">Edit</a>
+                                                    <form action="{{ url_for('admin.delete_tier', id=tier.id) }}"
+                                                        method="POST" class="d-inline"
+                                                        onsubmit="return confirm('Delete this tier?');">
+                                                        <button type="submit"
+                                                            class="btn btn-link text-danger py-0">Del</button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="2" class="text-center py-3 text-muted small">No tiers defined
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="alert alert-info mt-3">
+                        <h5><i class="fas fa-info-circle"></i> Tips</h5>
+                        <p class="small mb-0">Upload a logo for better visual consistency. Benefits should be one per
+                            line.</p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

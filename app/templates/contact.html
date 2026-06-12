@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us | Nebula Cybernetics Academy{% endblock %}
+{% block description %}Contact Nebula Cybernetics Academy - reach our Neo-Tokyo headquarters, submit inquiries, or connect via
+email, phone, or social media.{% endblock %}
+
+{% block content %}
+<!-- MODERN CONTACT HERO -->
+<section class="contact-hero">
+    <div class="container contact-hero__inner">
+        <h1 class="contact-hero__title">
+            Let's Start a <span class="text-accent">Conversation</span>
+        </h1>
+        <p class="contact-hero__lead">
+            {{ page.hero_description if page and page.hero_description else "Whether you're looking to partner,
+            register, or simply learn more about Nebula, our team is here to guide you every step of the way." }}
+        </p>
+    </div>
+</section>
+
+<section class="contact-content">
+    <div class="container">
+        <!-- TOP GRID: Main Form & Primary Details -->
+        <div class="contact-grid mb-80">
+
+            <!-- LEFT COLUMN: The Form -->
+            <div class="contact-grid__form">
+                <div id="contact-status" class="contact-form-premium">
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="contact-alert contact-alert--{{ 'success' if category == 'success' else 'error' }} animate-fade-in">
+                        <i class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                        <span>{{ message }}</span>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+
+                    <div class="mb-40">
+                        <h2 class="contact-form__title">Send a Message</h2>
+                        <p class="text-grey">Fields marked with * are required. We typically respond within 24 hours.</p>
+                    </div>
+
+                    <form id="contactForm" method="POST" action="{{ url_for('main.contact') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <!-- Honeypot field (hidden from humans) -->
+                        <div class="honeypot" aria-hidden="true">
+                            <input type="text" name="website_field" tabindex="-1" autocomplete="off">
+                        </div>
+                        <!-- Hidden timestamp for bot detection -->
+                        <input type="hidden" name="form_timestamp" id="form-timestamp">
+                        <div class="form-row-grid">
+                            <div class="form-group">
+                                <label class="field-label">Full Name *</label>
+                                <input type="text" name="name" class="modern-input" placeholder="Your Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="field-label">Email Address *</label>
+                                <input type="email" name="email" class="modern-input" placeholder="name@company.com"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div class="form-row-grid">
+                            <div class="form-group">
+                                <label class="field-label">Phone Number</label>
+                                <input type="tel" name="phone" class="modern-input" placeholder="+X-XXX-XXXXXXX">
+                            </div>
+                            <div class="form-group">
+                                <label class="field-label">Organization</label>
+                                <input type="text" name="organization" class="modern-input"
+                                    placeholder="Company or School Name">
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-25">
+                            <label class="field-label">Inquiry Type *</label>
+                            <select name="inquiry_type" class="modern-input select-arrow" required>
+                                {% if inquiry_types %}
+                                {% for type in inquiry_types %}
+                                <option value="{{ type.id }}" {% if selected_type_id==type.id or (selected_type_val and
+                                    selected_type_val.lower() in type.name.lower()) %}selected{% endif %}>
+                                    {{ type.name }}
+                                </option>
+                                {% endfor %}
+                                {% else %}
+                                <option value="General Inquiry">General Inquiry</option>
+                                {% endif %}
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-40">
+                            <label class="field-label">Your Message</label>
+                            <textarea name="message" class="modern-input no-resize" rows="5"
+                                placeholder="Tell us more about how we can help...">{% if selected_program %}I am interested in registering for the {{ selected_program }} program. Please provide more details on next steps.{% endif %}</textarea>
+                        </div>
+
+                        <button type="submit" class="premium-submit-btn">
+                            <span class="btn-text">Submit Inquiry</span>
+                            <span class="btn-icon"><i class="fas fa-arrow-right"></i></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Contact Info Cards -->
+            <div class="contact-grid__info">
+
+                <!-- HEADQUARTERS CARD -->
+                <div class="info-card-premium">
+                    <div class="card-icon"><i class="fas fa-building"></i></div>
+                    <div class="card-body">
+                        <h3>Global Headquarters</h3>
+                        <p class="address">{{ contact_info.address if contact_info else 'Neo-Tokyo, Japan' }}
+                        </p>
+                        <div class="contact-links">
+                            <a href="mailto:{{ contact_info.email if contact_info else 'connect@nebulacybernetics.com' }}"><i
+                                    class="fas fa-envelope"></i> {{ contact_info.email if contact_info else
+                                'connect@nebulacybernetics.com' }}</a>
+                            <a href="tel:{{ contact_info.phone if contact_info else '+971XXXXXXX' }}"><i
+                                    class="fas fa-phone-alt"></i> {{ contact_info.phone if contact_info else '+971 (0)
+                                XX XXX XXXX' }}</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOURS CARD -->
+                <div class="info-card-premium">
+                    <div class="card-icon card-icon--blue"><i class="fas fa-clock"></i></div>
+                    <div class="card-body">
+                        <h3>Business Hours</h3>
+                        <div class="hours-content">
+                            {{ contact_info.hours | safe if contact_info and contact_info.hours else 'Monday - Friday:
+                            09:00 - 18:00 (GST)<br>Saturday - Sunday: Closed' }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOCIALS CARD -->
+                <div class="info-card-premium">
+                    <div class="card-icon card-icon--gold"><i class="fas fa-hashtag"></i></div>
+                    <div class="card-body">
+                        <h3>Connect With Us</h3>
+                        <p class="socials-blurb">Join our community online for latest updates and highlights.</p>
+                        <div class="social-circles">
+                            {% if social_media %}
+                            {% for social in social_media %}
+                            <a href="{{ social.url }}" title="{{ social.platform }}"><i
+                                    class="{{ social.icon_class }}"></i></a>
+                            {% endfor %}
+                            {% else %}
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DEPARTMENT ROW: Modern Small Cards -->
+        <div class="mb-80">
+            <div class="text-center mb-40">
+                <h2 class="dept-heading">Specific Inquiries</h2>
+                <p class="text-grey measure-sm mt-15">Reach out directly to our specialized
+                    departments for faster assistance.</p>
+            </div>
+
+            <div class="grid-3">
+                <div class="dept-card">
+                    <div class="dept-icon"><i class="fas fa-handshake"></i></div>
+                    <h4>Partnerships</h4>
+                    <a href="mailto:partnerships@nebulaglobal.com">partnerships@nebulaglobal.com</a>
+                </div>
+                <div class="dept-card">
+                    <div class="dept-icon"><i class="fas fa-trophy"></i></div>
+                    <h4>Competitions</h4>
+                    <a href="mailto:competitions@nebulaglobal.com">competitions@nebulaglobal.com</a>
+                </div>
+                <div class="dept-card">
+                    <div class="dept-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <h4>Training</h4>
+                    <a href="mailto:training@nebulaglobal.com">training@nebulaglobal.com</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ASSURANCE SECTION -->
+        <div class="premium-assurance">
+            <h3 class="premium-assurance__title">The Nebula Assurance</h3>
+            <p class="premium-assurance__text">
+                Every interaction matters. We are committed to responding with the care, clarity, and professionalism
+                that defines our global community.
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}

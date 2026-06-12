@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Join Us | Nebula Cybernetics Academy{% endblock %}
+{% block description %}Join Nebula Cybernetics Academy - opportunities for schools, educators, students, corporate sponsors,
+embassies, and country coordinators.{% endblock %}
+
+{% block content %}
+<!-- JOIN US SECTION -->
+<section id="join-us" class="section-alt">
+    <div class="container">
+        <div class="section-header reveal">
+
+            <h2>{{ page.hero_title if page else 'Become Part of a Global Community Committed to Excellence.' }}</h2>
+            {% if sections and sections.intro %}
+            {{ sections.intro.content | safe }}
+            {% else %}
+            <p>Nebula Cybernetics Academy welcomes schools, professionals, partners, and institutions who believe in the
+                power of education, innovation, and leadership.</p>
+            <p>Whether you want to enroll your students, participate in professional training, collaborate as a sponsor,
+                volunteer, or represent Nebula in your country — this is the place to begin.</p>
+            {% endif %}
+        </div>
+
+        <div class="grid-3">
+            {% if sections.get('join_options') and sections['join_options'].items.count() %}
+            {% for item in sections['join_options'].items|sort(attribute='order') %}
+            <div class="join-card">
+                <h3>{% if item.icon %}<i class="{{ item.icon }}"></i> {% endif %}{{ item.title }}</h3>
+                {% if item.subtitle %}<p>{{ item.subtitle }}</p>{% endif %}
+                {% if item.content %}
+                <ul>
+                    {% for line in item.content.split('\n') %}
+                    {% if line.strip() %}<li>{{ line.strip() }}</li>{% endif %}
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% if item.link_url %}
+                <a href="{{ item.link_url }}" class="join-cta-btn">{{ item.link_text or 'Get Involved' }}</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% else %}
+            <!-- 1. SCHOOLS -->
+            <div class="join-card">
+                <h3><i class="fas fa-school"></i> Schools</h3>
+                <p>Empower your students. Strengthen your teachers. Elevate your institution.</p>
+                <p class="list-label">Schools that join Nebula gain access to:</p>
+                <ul>
+                    <li>International competitions</li>
+                    <li>Professional development programs</li>
+                    <li>School leadership training</li>
+                    <li>Recognition & awards</li>
+                    <li>Exclusive learning resources</li>
+                    <li>Ambassador School status</li>
+                </ul>
+                <a href="{{ url_for('main.contact', type='school') }}" class="join-cta-btn">➡ Register Your School</a>
+            </div>
+
+            <!-- 2. EDUCATORS -->
+            <div class="join-card">
+                <h3><i class="fas fa-chalkboard-user"></i> Educators & Professionals</h3>
+                <p>Advance your career through world-class training.</p>
+                <p class="list-label">Educators, coordinators, and school leaders can join:</p>
+                <ul>
+                    <li>Professional development courses</li>
+                    <li>Leadership training</li>
+                    <li>21st-century teaching workshops</li>
+                    <li>Coordinator and middle-leadership capacity programs</li>
+                    <li>Certified programs through Nebula Digital Platform</li>
+                </ul>
+                <a href="{{ url_for('main.contact', type='training') }}" class="join-cta-btn">➡ Enroll in Training</a>
+            </div>
+
+            <!-- 3. STUDENTS -->
+            <div class="join-card">
+                <h3><i class="fas fa-user-graduate"></i> Students & Parents</h3>
+                <p>Unlock confidence, creativity, and global exposure.</p>
+                <p class="list-label">Students can participate in:</p>
+                <ul>
+                    <li>Neural Interface Bootcamp</li>
+                    <li>Quantum Computing League</li>
+                    <li>Cybernetics Challenge</li>
+                    <li>AI Ethics Olympiad</li>
+                    <li>Youth expos and festivals</li>
+                </ul>
+                <a href="{{ url_for('main.contact', type='competition') }}" class="join-cta-btn">➡ Register for
+                    Competitions</a>
+            </div>
+
+            <!-- 4. CORPORATE SPONSORS -->
+            <div class="join-card">
+                <h3><i class="fas fa-handshake"></i> Corporate Sponsors & CSR Partners</h3>
+                <p>Partner for impact. Build visibility. Support education.</p>
+                <p class="list-label">Sponsoring Nebula events gives your organization:</p>
+                <ul>
+                    <li>Direct community impact</li>
+                    <li>Brand visibility across schools</li>
+                    <li>Association with excellence, learning, and social responsibility</li>
+                    <li>Year-round engagement opportunities</li>
+                    <li>Naming and branding opportunities for awards or event categories</li>
+                </ul>
+                <a href="{{ url_for('main.contact', type='sponsor') }}" class="join-cta-btn">➡ Become a Sponsor</a>
+            </div>
+
+            <!-- 5. EMBASSIES -->
+            <div class="join-card">
+                <h3><i class="fas fa-landmark"></i> Embassies, Institutions & Cultural Missions</h3>
+                <p>Promote culture, language, and international collaboration.</p>
+                <p class="list-label">Nebula offers:</p>
+                <ul>
+                    <li>Co-branded competitions</li>
+                    <li>Cultural events & festivals</li>
+                    <li>Teacher exchange opportunities</li>
+                    <li>Academic and leadership training</li>
+                    <li>International education fairs</li>
+                </ul>
+                <a href="{{ url_for('main.contact', type='embassy') }}" class="join-cta-btn">➡ Collaborate with Us</a>
+            </div>
+
+            <!-- 6. COUNTRY COORDINATOR -->
+            <div class="join-card">
+                <h3><i class="fas fa-globe-americas"></i> Become a Country Coordinator / Chapter Partner</h3>
+                <p>Bring Nebula programs to your country.</p>
+                <p class="list-label">Country Coordinators receive:</p>
+                <ul>
+                    <li>Chapter rights</li>
+                    <li>Brand licensing</li>
+                    <li>Training & onboarding</li>
+                    <li>Revenue-sharing models</li>
+                    <li>Exclusive regional territories</li>
+                </ul>
+                <a href="{{ url_for('main.contact', type='country') }}" class="join-cta-btn">➡ Apply to Be a Country
+                    Partner</a>
+            </div>
+
+            <!-- 7. VOLUNTEERS -->
+            <div class="join-card">
+                <h3><i class="fas fa-hands-helping"></i> Volunteers & Interns</h3>
+                <p>Shape events. Learn. Grow.</p>
+                <p class="list-label">Volunteers help with:</p>
+                <ul>
+                    <li>Event logistics</li>
+                    <li>Social media</li>
+                    <li>Training support</li>
+                    <li>Digital content</li>
+                    <li>Community outreach</li>
+                </ul>
+                <a href="{{ url_for('main.contact', type='volunteer') }}" class="join-cta-btn">➡ Join Our
+                    Volunteer/Intern Program</a>
+            </div>
+            {% endif %}
+
+            <!-- GENERAL CONTACT (always shown) -->
+            <div class="join-card join-card--dark">
+                <h3><i class="fas fa-envelope"></i> General Contact</h3>
+                <p>If you're not sure where to start, our team is here to guide you.</p>
+                <div class="mt-auto">
+                    <a href="{{ url_for('main.contact') }}" class="btn">➡ Contact Us</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- INVITATION PROMISE -->
+        <div class="partner-promise-box mt-80">
+            <h3>THE NEBULA INVITATION</h3>
+            <p>If you believe in excellence, learning, innovation, and meaningful impact — there is a place for you at
+                Nebula.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

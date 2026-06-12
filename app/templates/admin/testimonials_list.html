@@ -1,0 +1,38 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Testimonials</h1>
+    <a href="{{ url_for('admin.create_testimonial') }}" class="btn btn-primary">Add Testimonial</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>Author</th>
+                <th>Role</th>
+                <th>Content</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in testimonials %}
+            <tr>
+                <td>{{ t.author_name }}</td>
+                <td>{{ t.author_role }}</td>
+                <td>{{ t.content | truncate(50) }}</td>
+                <td>
+                    <a href="{{ url_for('admin.edit_testimonial', id=t.id) }}"
+                        class="btn btn-sm btn-outline-primary">Edit</a>
+                    <form action="{{ url_for('admin.delete_testimonial', id=t.id) }}" method="POST" class="d-inline"
+                        onsubmit="return confirm('Are you sure?');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

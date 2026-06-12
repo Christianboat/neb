@@ -1,0 +1,46 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Impact Metrics</h1>
+    <div>
+        <a href="{{ url_for('admin.create_metric') }}" class="btn btn-primary">Add Metric</a>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>Icon</th>
+                <th>Value</th>
+                <th>Label</th>
+                <th>Order</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for metric in metrics %}
+            <tr>
+                <td><i class="{{ metric.icon }}"></i> ({{ metric.icon }})</td>
+                <td>{{ metric.value }}</td>
+                <td>{{ metric.label }}</td>
+                <td>{{ metric.order }}</td>
+                <td>
+                    <a href="{{ url_for('admin.edit_metric', id=metric.id) }}"
+                        class="btn btn-sm btn-outline-primary">Edit</a>
+                    <form action="{{ url_for('admin.delete_metric', id=metric.id) }}" method="POST" class="d-inline"
+                        onsubmit="return confirm('Are you sure?');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="text-center">No metrics found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
